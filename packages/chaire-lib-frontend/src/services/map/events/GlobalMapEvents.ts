@@ -4,9 +4,9 @@
  * This file is licensed under the MIT License.
  * License text available at https://opensource.org/licenses/MIT
  */
-import MapboxGL from 'mapbox-gl';
 import _debounce from 'lodash/debounce';
 import { lineString, bboxPolygon, bbox, feature } from '@turf/turf';
+import { MjolnirEvent } from 'mjolnir.js';
 
 import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
 import Preferences from 'chaire-lib-common/lib/config/Preferences';
@@ -18,10 +18,10 @@ import { MapUpdateLayerEventType } from './MapEventsCallbacks';
 
 // TODO: Make zoomLimit modifiable by user
 const zoomLimit = 14; //Zoom levels smaller than this will not apply line separation
-let applyAestheticChangesNonce: object = new Object();
+const applyAestheticChangesNonce: object = new Object();
 
 /* This file encapsulates global map events, that do not require a specific context */
-
+/*
 const onMouseOut = (_e: MapboxGL.MapMouseEvent) => {
     serviceLocator.eventManager.emit('map.updateMouseCoordinates', null);
 };
@@ -68,18 +68,20 @@ const onDragStart = (e: MapboxGL.MapMouseEvent) => {
     map._draggingEventsOrder = ['dragstart'];
 };
 
-const onMouseMove = (e: MapboxGL.MapMouseEvent) => {
+const onMouseMove = (e: MjolnirEvent) => {
     serviceLocator.eventManager.emit('map.updateMouseCoordinates', e.lngLat.toArray());
 };
-
+*/
 const globalEventDescriptors: MapEventHandlerDescription[] = [
-    { type: 'map', eventName: 'mouseout', handler: onMouseOut },
+    /*  { type: 'map', eventName: 'mouseout', handler: onMouseOut },
     { type: 'map', eventName: 'zoomend', handler: onZoomEnd },
     { type: 'map', eventName: 'dragend', handler: onDragEnd },
     { type: 'map', eventName: 'dragstart', handler: onDragStart },
-    { type: 'map', eventName: 'mousemove', handler: onMouseMove }
+    { type: 'map', eventName: 'mousemove', handler: onMouseMove } */
 ];
 
+// TODO Move to Transition
+/*
 const applyAestheticChanges = async (boundsGL: MapboxGL.LngLatBounds, zoom: number): Promise<void> => {
     if (!Preferences.get('features.map.prettyDisplay', false)) {
         return;
@@ -127,6 +129,6 @@ const applyAestheticChanges = async (boundsGL: MapboxGL.LngLatBounds, zoom: numb
     serviceLocator.eventManager.emit('map.updateLayers', {
         transitNodes: transitNodes
     });
-};
+}; */
 
 export default globalEventDescriptors;

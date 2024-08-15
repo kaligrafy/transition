@@ -8,34 +8,34 @@ import React, { PropsWithChildren } from 'react';
 import { createRoot } from 'react-dom/client';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import ReactDom from 'react-dom';
-import DeckGL from '@deck.gl/react';
-import { Layer, Deck } from '@deck.gl/core';
 import _cloneDeep from 'lodash/cloneDeep';
 import _debounce from 'lodash/debounce';
-import { Map as MapLibreMap } from 'react-map-gl/maplibre';
 
-import Preferences from 'chaire-lib-common/lib/config/Preferences';
-import layersConfig from '../../config/layers.config';
-import globalMapEvents from 'chaire-lib-frontend/lib/services/map/events/GlobalMapEvents';
-import transitionMapEvents from '../../services/map/events';
-import mapCustomEvents from '../../services/map/events/MapRelatedCustomEvents';
-import MapLayerManager from 'chaire-lib-frontend/lib/services/map/MapLayerManager';
-import TransitPathFilterManager from '../../services/map/TransitPathFilterManager';
-import MapPopupManager from 'chaire-lib-frontend/lib/services/map/MapPopupManager';
-import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
-import { findOverlappingFeatures } from 'chaire-lib-common/lib/services/geodata/FindOverlappingFeatures';
-import Node from 'transition-common/lib/services/nodes/Node';
-import MapButton from '../parts/MapButton';
-
-
+// deck.gl and maps
+import DeckGL from '@deck.gl/react';
+import { Layer, Deck } from '@deck.gl/core';
+import { PickingInfo } from 'deck.gl';
+import { BitmapLayer } from '@deck.gl/layers';
+import { TileLayer } from '@deck.gl/geo-layers';
 import { featureCollection as turfFeatureCollection } from '@turf/turf';
+import { Map as MapLibreMap } from 'react-map-gl/maplibre';
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+// chaire-lib-common:
+import Preferences from 'chaire-lib-common/lib/config/Preferences';
+import { findOverlappingFeatures } from 'chaire-lib-common/lib/services/geodata/FindOverlappingFeatures';
+import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
+import { EventManager } from 'chaire-lib-common/lib/services/events/EventManager';
+
+// chaire-lib-frontend:
+import globalMapEvents from 'chaire-lib-frontend/lib/services/map/events/GlobalMapEvents';
+import MapLayerManager from 'chaire-lib-frontend/lib/services/map/MapLayerManager';
+import MapPopupManager from 'chaire-lib-frontend/lib/services/map/MapPopupManager';
 import { LayoutSectionProps } from 'chaire-lib-frontend/lib/services/dashboard/DashboardContribution';
-import { deleteUnusedNodes } from '../../services/transitNodes/transitNodesUtils';
 import {
     MapUpdateLayerEventType,
     MapFilterLayerEventType
 } from 'chaire-lib-frontend/lib/services/map/events/MapEventsCallbacks';
-import { EventManager } from 'chaire-lib-common/lib/services/events/EventManager';
 import {
     layerEventNames,
     tooltipEventNames,
@@ -47,17 +47,20 @@ import {
     MapSelectEventHandlerDescriptor,
     MapCallbacks
 } from 'chaire-lib-frontend/lib/services/map/IMapEventHandler';
-import getLayer from './layers/TransitionMapLayer';
-import { PickingInfo } from 'deck.gl';
 
-import { BitmapLayer } from '@deck.gl/layers';
-import { TileLayer } from '@deck.gl/geo-layers';
-import { MjolnirEvent, MjolnirGestureEvent } from 'mjolnir.js';
-
-import MeasureDistanceDisplay from '../parts/MeasureDistanceDisplay';
+// transition-common:
+import Node from 'transition-common/lib/services/nodes/Node';
 import { MeasureTool } from 'transition-common/lib/services/measureTool/MeasureTool';
 
-import 'maplibre-gl/dist/maplibre-gl.css';
+// transition-frontend:
+import transitionMapEvents from '../../services/map/events';
+import mapCustomEvents from '../../services/map/events/MapRelatedCustomEvents';
+import TransitPathFilterManager from '../../services/map/TransitPathFilterManager';
+import MapButton from '../parts/MapButton';
+import layersConfig from '../../config/layers.config';
+import { deleteUnusedNodes } from '../../services/transitNodes/transitNodesUtils';
+import getLayer from './layers/TransitionMapLayer';
+import MeasureDistanceDisplay from '../parts/MeasureDistanceDisplay';
 
 export interface MainMapProps extends LayoutSectionProps {
     zoom: number;

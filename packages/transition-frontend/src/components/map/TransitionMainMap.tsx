@@ -16,8 +16,7 @@ import _debounce from 'lodash/debounce';
 
 // deck.gl and maps
 import DeckGL from '@deck.gl/react';
-import { Layer, Deck } from '@deck.gl/core';
-import { PickingInfo } from 'deck.gl';
+import { Layer, Deck, PickingInfo } from '@deck.gl/core';
 import { BitmapLayer } from '@deck.gl/layers';
 import { TileLayer } from '@deck.gl/geo-layers';
 import { featureCollection as turfFeatureCollection } from '@turf/turf';
@@ -214,7 +213,7 @@ class MainMap extends React.Component<MainMapProps, MainMapState> {
 
     enableMeasureTool = () => {
         //this.setDrawMode(DrawLineStringMode);
-        const measureTool = new MeasureTool(undefined, undefined);
+        const measureTool = new MeasureTool(undefined, undefined, undefined);
         serviceLocator.selectedObjectsManager.select('measureTool', measureTool);
         this.setState({
             measureToolEnabled: true,

@@ -6,8 +6,50 @@
  */
 import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
 
-const layersConfig = {
+// import deck.gl layers config types: https://deck.gl/docs/api-reference/core/layer#properties
+import { LineLayerProps, TextLayerProps, ScatterplotLayerProps } from '@deck.gl/layers';
 
+// setup any layer props types from deck.gl:
+type CustomLayerProps = LineLayerProps | TextLayerProps | ScatterplotLayerProps;
+
+// deck.gl layers config:
+const layersConfig: { [layerShortname: string]: { type: string, config: CustomLayerProps } } = {
+    measureToolLine: {
+        type: 'line',
+        config: {
+            id: 'measureToolLine',
+            data: [],
+            getColor: [255, 255, 255, 150],
+            getWidth: 1,
+            widthUnits: 'pixels',
+            widthMinPixels: 3,
+            widthMaxPixels: 3,
+        }
+    },
+    measureToolPoint: {
+        type: 'circle',
+        config: {
+            id: 'measureToolPoint',
+            data: [],
+            radiusUnits: 'pixels',
+            getPosition: [0, 0],
+            getRadius: 4,
+            getFillColor: [0, 0, 0, 255],
+        }
+    },
+    measureToolText: {
+        type: 'text',
+        config: {
+            id: 'measureToolText',
+            data: [],
+            getSize: 12,
+            background: true,
+            backgroundPadding: [2, 2],
+        }
+    }
+};
+/*
+const layersConfig = {
     measureToolLine: {
         type: 'line',
         color: [255, 255, 255, 150],
@@ -16,7 +58,7 @@ const layersConfig = {
         widthScale: 1,
         widthMinPixels: 3,
         capRounded: true,
-        jointRounded: true,
+        jointRounded: true
     },
 
     measureToolText: {
@@ -25,7 +67,7 @@ const layersConfig = {
         //fontWeight: 'bold',
         fontSize: '1.5rem',
         background: true,
-        backgroundPadding: 2,
+        backgroundPadding: 2
     },
 
     measureToolPoint: {
@@ -604,6 +646,6 @@ const layersConfig = {
             }
         }
     }
-};
+};*/
 
 export default layersConfig;

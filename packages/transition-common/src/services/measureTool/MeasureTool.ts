@@ -11,9 +11,9 @@ export const formatDistance = (dist: number) => {
     if (dist < 1) {
         return `${(dist * 100).toFixed(0)} cm`;
     } else if (dist < 100) {
-        return `${(dist).toFixed(2)} m`;
+        return `${dist.toFixed(2)} m`;
     } else if (dist < 1000) {
-        return `${(dist).toFixed(0)} m`;
+        return `${dist.toFixed(0)} m`;
     } else {
         return `${(dist / 1000).toFixed(2)} km`;
     }
@@ -25,15 +25,14 @@ export const formatDistance = (dist: number) => {
  * and save the results in the class attributes
  */
 export class MeasureTool {
-
     // At first, the line is a single point, then it is updated to a line
     private pointsGeojsonCollection: GeoJSON.FeatureCollection<GeoJSON.Point> = {
         type: 'FeatureCollection',
-        features: [],
+        features: []
     };
     private labelsGeojsonCollection: GeoJSON.FeatureCollection<GeoJSON.Point> = {
         type: 'FeatureCollection',
-        features: [],
+        features: []
     };
     private lineGeojson: GeoJSON.Feature<GeoJSON.LineString> | undefined;
     private totalDistanceM: number | undefined;
@@ -62,29 +61,28 @@ export class MeasureTool {
             return;
         }
         this.totalDistanceM = turfLength(this.lineGeojson, { units: 'meters' });
-        turfSegmentEach(this.lineGeojson, (
-            currentSegment,
-            featureIndex,
-            multiFeatureIndex,
-            geometryIndex,
-            segmentIndex,
-        ) => {
-            if (currentSegment !== undefined && segmentIndex !== undefined) {
-                this.distanceMBySegmentIndex[segmentIndex] = turfLength(currentSegment, { units: 'meters' });
-                const segmentFromCoordinate = currentSegment.geometry.coordinates[0];
-                const segmentToCoordinate = currentSegment.geometry.coordinates[1];
-                let segmentAngle = 90 - turfRhumbBearing(segmentFromCoordinate, segmentToCoordinate);
-                if (Math.abs(segmentAngle) > 90) {
-                    segmentAngle += 180;
+        turfSegmentEach(
+            this.lineGeojson,
+            (currentSegment, featureIndex, multiFeatureIndex, geometryIndex, segmentIndex) => {
+                if (currentSegment !== undefined && segmentIndex !== undefined) {
+                    this.distanceMBySegmentIndex[segmentIndex] = turfLength(currentSegment, { units: 'meters' });
+                    const segmentFromCoordinate = currentSegment.geometry.coordinates[0];
+                    const segmentToCoordinate = currentSegment.geometry.coordinates[1];
+                    let segmentAngle = 90 - turfRhumbBearing(segmentFromCoordinate, segmentToCoordinate);
+                    if (Math.abs(segmentAngle) > 90) {
+                        segmentAngle += 180;
+                    }
+                    this.labelsGeojsonCollection.features[segmentIndex].geometry.coordinates = [
+                        (segmentFromCoordinate[0] + segmentToCoordinate[0]) / 2,
+                        (segmentFromCoordinate[1] + segmentToCoordinate[1]) / 2
+                    ];
+                    this.labelsGeojsonCollection.features[segmentIndex].properties!.name = formatDistance(
+                        this.distanceMBySegmentIndex[segmentIndex]
+                    );
+                    this.labelsGeojsonCollection.features[segmentIndex].properties!.angle = segmentAngle;
                 }
-                this.labelsGeojsonCollection.features[segmentIndex].geometry.coordinates = [
-                    (segmentFromCoordinate[0] + segmentToCoordinate[0]) / 2,
-                    (segmentFromCoordinate[1] + segmentToCoordinate[1]) / 2
-                ];
-                this.labelsGeojsonCollection.features[segmentIndex].properties!.name = formatDistance(this.distanceMBySegmentIndex[segmentIndex]);
-                this.labelsGeojsonCollection.features[segmentIndex].properties!.angle = segmentAngle;
             }
-        });
+        );
     }
 
     /**
@@ -94,7 +92,7 @@ export class MeasureTool {
     public getDistances() {
         return {
             totalDistanceM: this.totalDistanceM,
-            distanceMBySegmentIndex: this.distanceMBySegmentIndex,
+            distanceMBySegmentIndex: this.distanceMBySegmentIndex
         };
     }
 
@@ -121,7 +119,9 @@ export class MeasureTool {
     public addVertex(vertex: GeoJSON.Feature<GeoJSON.Point>) {
         this.addPoint(vertex);
         if (this.pointsGeojsonCollection.features.length >= 2) {
-            this.lineGeojson = turfLineString(this.pointsGeojsonCollection.features.map((feature) => feature.geometry.coordinates));
+            this.lineGeojson = turfLineString(
+                this.pointsGeojsonCollection.features.map((feature) => feature.geometry.coordinates)
+            );
         }
         this.calculateDistances();
     }

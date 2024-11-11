@@ -17,7 +17,6 @@ import { MjolnirGestureEvent } from 'mjolnir.js';
 import { DataFilterExtension } from '@deck.gl/extensions';
 import AnimatedArrowPathLayer from './AnimatedArrowPathLayer';
 
-
 /*const layer = new ScatterplotLayer({
     lineWidthUnits
 })*/
@@ -170,7 +169,9 @@ const getLayerFeatureFilter = (props: TransitionMapLayerProps, config: LayerDesc
     } else if (getFilterFcts.length > 1) {
         layerFilter.getFilterValue = (feature: GeoJSON.Feature) =>
             getFilterFcts.map((fct) => (typeof fct === 'function' ? fct(feature) : fct));
-        layerFilter.extensions = [new DataFilterExtension({ filterSize: getFilterFcts.length as 0 | 1 | 2 | 3 | 4 | undefined })];
+        layerFilter.extensions = [
+            new DataFilterExtension({ filterSize: getFilterFcts.length as 0 | 1 | 2 | 3 | 4 | undefined })
+        ];
         layerFilter.filterRange = filterRanges;
     }
     return layerFilter;
@@ -366,7 +367,6 @@ const getPolygonLayer = (
     });
 };
 
-
 const getTextLayer = (
     props: TransitionMapLayerProps,
     config: LayerDescription.TextLayerConfiguration,
@@ -384,7 +384,7 @@ const getTextLayer = (
         getPosition: (d) => d.geometry.coordinates,
         getAlignmentBaseline: 'bottom',
         getSize: 12,
-        getBackgroundColor: [0,0,0,100],
+        getBackgroundColor: [0, 0, 0, 100],
         background: true,
         fontFamily: 'Lato, sans-serif',
         getColor: [255, 255, 255, 150],
@@ -428,7 +428,8 @@ const getScatterLayer = (
     if (radiusUnits !== undefined) {
         layerProperties.radiusUnits = radiusUnits;
     }
-    const strokeRadiusScale = config.strokeRadiusScale === undefined ? undefined : layerNumberGetter(config.strokeRadiusScale, 1);
+    const strokeRadiusScale =
+        config.strokeRadiusScale === undefined ? undefined : layerNumberGetter(config.strokeRadiusScale, 1);
     if (strokeRadiusScale !== undefined) {
         layerProperties.strokeRadiusScale = strokeRadiusScale;
     }

@@ -620,7 +620,6 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
     }): PickingInfo[] => (this.mapContainer.current as Deck).pickMultipleObjects(opts);
 
     render() {
-
         // TODO: Deck.gl Migration: Should this be a state or a local field (equivalent of useMemo)? To avoid recalculating for every render? See how often we render when the migration is complete
         const enabledLayers = this.layerManager.getEnabledLayers();
         const layers: Layer[] = enabledLayers
@@ -662,17 +661,17 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
                     >
                         <MapLibreMap mapStyle={this.state.mapStyleURL} />
                     </DeckGL>
-                    <div className='tr__map-button-container'>
-                        {this.layerManager.layerIsEnabled('measureToolPoint') && <MapButton
-                            title="main:MeasureTool"
-                            className={`${this.state.measureToolEnabled ? 'active' : ''}`}
-                            onClick={() => this.enableMeasureTool()}
-                            iconPath={'/dist/images/icons/interface/ruler_white.svg'}
-                        />}
+                    <div className="tr__map-button-container">
+                        {this.layerManager.layerIsEnabled('measureToolPoint') && (
+                            <MapButton
+                                title="main:MeasureTool"
+                                className={`${this.state.measureToolEnabled ? 'active' : ''}`}
+                                onClick={() => this.enableMeasureTool()}
+                                iconPath={'/dist/images/icons/interface/ruler_white.svg'}
+                            />
+                        )}
                     </div>
-                    {this.state.measureToolEnabled && (
-                        <MeasureDistanceDisplay distance={this.state.measureDistance} />
-                    )}
+                    {this.state.measureToolEnabled && <MeasureDistanceDisplay distance={this.state.measureDistance} />}
                 </div>
             </section>
         );

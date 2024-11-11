@@ -9,11 +9,7 @@ interface MeasureDistanceDisplayProps extends WithTranslation {
 const MeasureDistanceDisplay: React.FC<MeasureDistanceDisplayProps> = ({ distance, t }) => {
     if (distance === undefined) return null;
 
-    return (
-        <div className="tr__measure-distance-display">
-            {`${t('main:Total')} ${formatDistance(distance)}`}
-        </div>
-    );
+    return <div className="tr__measure-distance-display">{`${t('main:Total')} ${formatDistance(distance)}`}</div>;
 };
 
 export default withTranslation()(MeasureDistanceDisplay);

@@ -17,11 +17,7 @@ interface MapButtonProps extends WithTranslation {
 
 const MapButton: React.FC<MapButtonProps> = ({ t, title, onClick, iconPath, className = '' }) => {
     return (
-        <button
-            className={`tr__map-button ${className}`}
-            onClick={onClick}
-            title={t(title)}
-        >
+        <button className={`tr__map-button ${className}`} onClick={onClick} title={t(title)}>
             <img src={iconPath} alt={title} className="tr__map-button-icon" />
         </button>
     );

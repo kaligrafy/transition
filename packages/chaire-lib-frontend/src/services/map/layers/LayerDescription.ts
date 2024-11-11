@@ -56,6 +56,11 @@ export type PointLayerConfiguration = CommonLayerConfiguration & {
      */
     radius?: FeatureNumber;
     radiusScale?: FeatureNumber;
+    radiusUnits?: 'pixels' | 'common' | 'meters';
+    strokeRadiusScale?: FeatureNumber;
+    strokeRadiusUnits?: 'pixels' | 'common' | 'meters';
+    lineWidthScale?: FeatureNumber;
+    lineWidthUnits?: 'pixels' | 'common' | 'meters';
     /**
      * Color of the contour of the feature
      */
@@ -101,6 +106,7 @@ export type BaseLineLayerConfiguration = CommonLayerConfiguration & {
     widthScale?: FeatureNumber;
     widthMinPixels?: FeatureNumber;
     widthMaxPixels?: FeatureNumber;
+    widthUnits?: 'pixels' | 'common' | 'meters';
     /**
      * Whether the end of the lines should be rounded
      */

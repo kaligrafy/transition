@@ -149,12 +149,7 @@ const defaultPreferences: PreferencesModel = {
                 'measureToolLine',
                 'measureToolPoint'
             ],
-            scenarios: [
-                'transitPathsForServices',
-                'measureToolText',
-                'measureToolLine',
-                'measureToolPoint'
-            ],
+            scenarios: ['transitPathsForServices', 'measureToolText', 'measureToolLine', 'measureToolPoint'],
             routing: [
                 'aggregatedOD' /*'transitPaths', 'transitNodes', 'transitStations', */,
                 'routingPathsStrokes',
@@ -173,13 +168,7 @@ const defaultPreferences: PreferencesModel = {
                 'measureToolLine',
                 'measureToolPoint'
             ],
-            odRouting: [
-                'aggregatedOD',
-                'odTripsProfile',
-                'measureToolText',
-                'measureToolLine',
-                'measureToolPoint'
-            ],
+            odRouting: ['aggregatedOD', 'odTripsProfile', 'measureToolText', 'measureToolLine', 'measureToolPoint'],
             gtfsImport: [
                 'aggregatedOD',
                 'transitNodesRoutingRadius',

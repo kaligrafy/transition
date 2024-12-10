@@ -65,7 +65,7 @@ export default class Calendar extends React.Component<InputCalendarProps, InputC
     }
 
     componentDidUpdate(prevProps: InputCalendarProps, _prevState: InputCalendarState): void {
-        if (prevProps !== this.props) {
+        if (prevProps.startDate !== this.props.startDate || prevProps.endDate !== this.props.endDate) {
             this.setState({
                 startDate: this.props.startDate
                     ? moment(this.props.startDate, this.props.dateFormat).valueOf()
@@ -86,16 +86,14 @@ export default class Calendar extends React.Component<InputCalendarProps, InputC
                 startDate,
                 endDate,
                 dateState: DateState.END
-            });
-            this.props.onChange(startDate, endDate);
+            }, () => this.props.onChange(startDate, endDate));
         } else {
             const endDate = new Date(date).setHours(23, 59, 0, 0);
 
             this.setState({
                 endDate,
                 dateState: DateState.START
-            });
-            this.props.onChange(this.state.startDate, endDate);
+            }, () => this.props.onChange(this.state.startDate, endDate));
         }
     }
 

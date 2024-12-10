@@ -5,18 +5,18 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import * as React from 'react';
-import { create } from 'react-test-renderer';
-import { mount } from 'enzyme';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
 import ErrorBoundary from '../ErrorBoundary';
 
-const testLabel = "Test";
+const testLabel = 'Test';
 
 test('Normal boundary', () => {
-    const errorBoundary = create(<ErrorBoundary
+    const errorBoundary = render(<ErrorBoundary
         key={testLabel}>
-            <input id="test"/>
-        </ErrorBoundary>)
-        .toJSON();
+        <input id="test"/>
+    </ErrorBoundary>);
     expect(errorBoundary).toMatchSnapshot();
 });
 
@@ -29,8 +29,8 @@ test('Boundary with error', () => {
 
     const errorBoundary = mount(<ErrorBoundary
         key={testLabel}>
-            <TestComponent/>
-        </ErrorBoundary>);
+        <TestComponent/>
+    </ErrorBoundary>);
     // Make sure expected components are there
     const collapsible = errorBoundary.find('.Collapsible');
     expect(collapsible).toHaveLength(1);
@@ -42,5 +42,5 @@ test('Boundary with error', () => {
     const children = trException.children();
     expect(children.length).toEqual(2);
     expect(trException.childAt(0).text()).toEqual(errorMessage);
-    expect(trException.childAt(1).text()).toContain("TestComponent");
+    expect(trException.childAt(1).text()).toContain('TestComponent');
 });

@@ -24,6 +24,7 @@ export interface ButtonProps {
     iconPath?: string;
     disabled?: boolean;
     title?: string;
+    name?: string;
     style?: { [key: string]: string };
 }
 
@@ -42,6 +43,8 @@ export class Button extends React.Component<ButtonProps> {
         size: 'large',
         iconClass: '_icon',
         style: {},
+        title: undefined,
+        name: undefined,
         disabled: false
     };
 
@@ -97,6 +100,9 @@ export class Button extends React.Component<ButtonProps> {
             }
             if (this.props.title) {
                 attributes.title = this.props.title;
+            }
+            if (this.props.name) {
+                attributes.name = this.props.name;
             }
             return (
                 <div className={this.props.align} style={this.props.style || {}}>

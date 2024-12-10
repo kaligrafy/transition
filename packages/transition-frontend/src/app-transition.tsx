@@ -5,7 +5,7 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { I18nextProvider } from 'react-i18next';
 import { createBrowserHistory } from 'history';
@@ -61,12 +61,12 @@ const jsx = (
     </Provider>
 );
 
-ReactDOM.render(<LoadingPage />, document.getElementById('app'));
+createRoot(document.getElementById('app') as HTMLElement).render(<LoadingPage />);
 
 let hasRendered = false;
 const renderApp = () => {
     if (!hasRendered) {
-        ReactDOM.render(jsx, document.getElementById('app'));
+        createRoot(document.getElementById('app') as HTMLElement).render(jsx);
         hasRendered = true;
     }
 };

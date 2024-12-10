@@ -5,25 +5,24 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import * as React from 'react';
-import { create } from 'react-test-renderer';
 import { Button } from '../Button';
 import { render, fireEvent } from '@testing-library/react';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { create } from 'node:domain';
 
 const mockOnClick = jest.fn();
 const testLabel = 'Test';
 
 test('Default props', () => {
-    const button = create(<Button
+    const { container } = render(<Button
         onClick={mockOnClick}
         label={testLabel}
-    />)
-        .toJSON();
-    expect(button).toMatchSnapshot();
+    />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Test overriding props with defaults', () => {
-    const button = create(<Button
+    const { container } = render(<Button
         onClick={mockOnClick}
         label={testLabel}
         align="left"
@@ -31,11 +30,11 @@ test('Test overriding props with defaults', () => {
         color="red"
         size="small"
     />);
-    expect(button).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Test disabled', () => {
-    const button = create(<Button
+    const { container } = render(<Button
         onClick={mockOnClick}
         label={testLabel}
         align="left"
@@ -44,7 +43,7 @@ test('Test disabled', () => {
         size="small"
         disabled={true}
     />);
-    expect(button).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Test on click', () => {
@@ -69,22 +68,22 @@ test('Test invisible', () => {
 });
 
 test('Test icon path', () => {
-    const button = create(<Button
+    const { container } = render(<Button
         onClick={mockOnClick}
         label={testLabel}
         iconPath="path/to/my/icon.png"
         iconClass="myIconClass"
     />);
-    expect(button).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Test icon', () => {
-    const button = create(<Button
+    const { container } = render(<Button
         onClick={mockOnClick}
         label={testLabel}
         icon={faCoffee}
         iconClass="myIconClass"
     />);
-    expect(button).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 

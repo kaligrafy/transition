@@ -68,13 +68,13 @@ class InputColor extends React.Component<InputColorProps, InputColorState> {
         return (
             <div className="_input _blank">
                 <div
-                    className="_circle-button"
+                    className="_circle-button _open-color-picker"
                     style={{ backgroundColor: color }}
                     onClick={this.handleOpenColorPicker}
                 ></div>
                 {this.state.displayColorPicker && (
                     <div style={popover}>
-                        <div style={cover} onClick={this.handleCloseColorPicker} />
+                        <div style={cover} onClick={this.handleCloseColorPicker} className="_close-color-picker" />
                         <div
                             className="_input-color"
                             style={{ backgroundColor: '#000000', border: 'none', padding: '0.5rem' }}

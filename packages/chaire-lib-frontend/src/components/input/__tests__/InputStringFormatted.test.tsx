@@ -5,35 +5,36 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import * as React from 'react';
-import { create } from 'react-test-renderer';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
 import InputStringFormatted from '../InputStringFormatted';
-import { mount } from 'enzyme';
+import { create } from 'node:domain';
 
 const mockOnChange = jest.fn();
-const testId = "StringFormattedWidgetId";
+const testId = 'StringFormattedWidgetId';
 const intToStr = (val: number): string => val.toString();
 const strToInt = (str: string) => (str === (intToStr(Number.parseInt(str))) ? Number.parseInt(str) : null);
 const originalIntValue = 10;
 const newIntValue = 20;
 
-beforeEach(function () {
+beforeEach(() => {
     mockOnChange.mockClear();
 });
 
 test('Default props', () => {
-    const input = create(<InputStringFormatted
+    const input = render(<InputStringFormatted
         id = {testId}
         onValueUpdated = {mockOnChange}
         stringToValue = {strToInt}
         valueToString = {intToStr}
         key = {testId}
-    />)
-        .toJSON();
+    />);
     expect(input).toMatchSnapshot();
 });
 
 test('All props', () => {
-    const input = create(<InputStringFormatted
+    const input = render(<InputStringFormatted
         id = {testId}
         onValueUpdated = {mockOnChange}
         value = "test"
@@ -43,21 +44,19 @@ test('All props', () => {
         stringToValue = {strToInt}
         valueToString = {intToStr}
         key = {testId}
-    />)
-        .toJSON();
+    />);
     expect(input).toMatchSnapshot();
 });
 
 test('Disabled', () => {
-    const input = create(<InputStringFormatted
+    const input = render(<InputStringFormatted
         id = {testId}
         onValueUpdated = {mockOnChange}
         disabled = {true}
         stringToValue = {strToInt}
         valueToString = {intToStr}
         key = {testId}
-    />)
-        .toJSON();
+    />);
     expect(input).toMatchSnapshot();
 });
 
@@ -72,7 +71,7 @@ test('Text input change with deprecated onValueChange', () => {
         key = {testId}
     />);
     // Validate initial values
-    const inputElement = stringFormattedInput.find({id: `${testId}`, type: 'text'});
+    const inputElement = stringFormattedInput.find({ id: `${testId}`, type: 'text' });
     expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe(originalIntValue.toString());
 
     // Change the value manually to a valid value
@@ -106,31 +105,31 @@ test('Text input change', () => {
         key = {testId}
     />);
     // Validate initial values
-    const inputElement = stringFormattedInput.find({id: `${testId}`, type: 'text'});
+    const inputElement = stringFormattedInput.find({ id: `${testId}`, type: 'text' });
     expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe(originalIntValue.toString());
 
     // Change the value manually to a valid value
     inputElement.getDOMNode<HTMLInputElement>().value = (originalIntValue + 1).toString();
     inputElement.simulate('change');
     expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith({value: originalIntValue + 1, valid: true});
+    expect(mockOnChange).toHaveBeenCalledWith({ value: originalIntValue + 1, valid: true });
     expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe((originalIntValue + 1).toString());
 
     // Manually change the value to something that doesn't pass the string validation
     inputElement.getDOMNode<HTMLInputElement>().value = (originalIntValue + 1).toString() + 'a';
     inputElement.simulate('change');
     expect(mockOnChange).toHaveBeenCalledTimes(2);
-    expect(mockOnChange).toHaveBeenLastCalledWith({value: null, valid: false});
+    expect(mockOnChange).toHaveBeenLastCalledWith({ value: null, valid: false });
     expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe((originalIntValue + 1).toString() + 'a');
 
     // Set the value to empty string
     inputElement.getDOMNode<HTMLInputElement>().value = '';
     inputElement.simulate('change');
     expect(mockOnChange).toHaveBeenCalledTimes(3);
-    expect(mockOnChange).toHaveBeenLastCalledWith({value: null, valid: true});
+    expect(mockOnChange).toHaveBeenLastCalledWith({ value: null, valid: true });
 });
 
 test('Test with type and pattern', () => {
     /* TODO tahini: testing with those props does not seem to work properly */
-})
+});
 

@@ -138,58 +138,64 @@ const SelectedObjectButtons: React.FunctionComponent<SelectedObjectButtonsProps<
 
     return (
         <div className="tr__form-buttons-container tr__form-selected-object-buttons-container">
-            <span title={props.t('main:Back')}>
+            <Button
+                title={props.t('main:Back')}
+                name="back"
+                key="back"
+                color="blue"
+                icon={faArrowLeft}
+                iconClass="_icon-alone"
+                label=""
+                onClick={object.hasChanged() ? props.openBackConfirmModal : props.backAction}
+            />
+            {isFrozen !== true && (
                 <Button
-                    key="back"
-                    color="blue"
-                    icon={faArrowLeft}
+                    title={props.t('main:Undo')}
+                    name="undo"
+                    key="undo"
+                    color="grey"
+                    disabled={!object.canUndo()}
+                    icon={faUndoAlt}
                     iconClass="_icon-alone"
                     label=""
-                    onClick={object.hasChanged() ? props.openBackConfirmModal : props.backAction}
+                    onClick={undoClick}
                 />
-            </span>
-            {isFrozen !== true && (
-                <span title={props.t('main:Undo')}>
-                    <Button
-                        key="undo"
-                        color="grey"
-                        disabled={!object.canUndo()}
-                        icon={faUndoAlt}
-                        iconClass="_icon-alone"
-                        label=""
-                        onClick={undoClick}
-                    />
-                </span>
             )}
             {isFrozen !== true && (
-                <span title={props.t('main:Redo')}>
-                    <Button
-                        key="redo"
-                        color="grey"
-                        disabled={!object.canRedo()}
-                        icon={faRedoAlt}
-                        iconClass="_icon-alone"
-                        label=""
-                        onClick={redoClick}
-                    />
-                </span>
+                <Button
+                    title={props.t('main:Redo')}
+                    name="redo"
+                    key="redo"
+                    color="grey"
+                    disabled={!object.canRedo()}
+                    icon={faRedoAlt}
+                    iconClass="_icon-alone"
+                    label=""
+                    onClick={redoClick}
+                />
             )}
             {props.hideSave !== true && (
-                <span title={props.t('main:Save')}>
-                    <Button key="save" icon={faCheckCircle} iconClass="_icon-alone" label="" onClick={saveAction} />
-                </span>
+                <Button
+                    title={props.t('main:Save')}
+                    name="save"
+                    key="save"
+                    icon={faCheckCircle}
+                    iconClass="_icon-alone"
+                    label=""
+                    onClick={saveAction}
+                />
             )}
             {isFrozen !== true && props.hideDelete !== true && (
-                <span title={props.t('main:Delete')}>
-                    <Button
-                        key="delete"
-                        color="red"
-                        icon={faTrashAlt}
-                        iconClass="_icon-alone"
-                        label=""
-                        onClick={object.isNew() ? deleteAction : props.openDeleteConfirmModal}
-                    />
-                </span>
+                <Button
+                    title={props.t('main:Delete')}
+                    name="delete"
+                    key="delete"
+                    color="red"
+                    icon={faTrashAlt}
+                    iconClass="_icon-alone"
+                    label=""
+                    onClick={object.isNew() ? deleteAction : props.openDeleteConfirmModal}
+                />
             )}
         </div>
     );

@@ -5,30 +5,29 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import * as React from 'react';
-import { create } from 'react-test-renderer';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+
 import InputString from '../InputString';
-import { render, fireEvent } from "@testing-library/react";
-import { mount } from 'enzyme';
 
 const mockOnChange = jest.fn();
-const testId = "StringWidgetId";
-const testLabel = "String label";
+const testId = 'StringWidgetId';
+const testLabel = 'String label';
 
-beforeEach(function () {
+beforeEach(() => {
     mockOnChange.mockClear();
 });
 
 test('Default props', () => {
-    const input = create(<InputString
+    const input = render(<InputString
         id = {testId}
         onValueUpdated = {mockOnChange}
-    />)
-        .toJSON();
+    />);
     expect(input).toMatchSnapshot();
 });
 
 test('All props', () => {
-    const input = create(<InputString
+    const input = render(<InputString
         id = {testId}
         onValueUpdated = {mockOnChange}
         value = "test"
@@ -37,76 +36,73 @@ test('All props', () => {
         autocompleteChoices = {[]}
         type = 'number'
         pattern = '[0-9]{1,2}'
-    />)
-        .toJSON();
+    />);
     expect(input).toMatchSnapshot();
 });
 
 test('Disabled', () => {
-    const input = create(<InputString
+    const input = render(<InputString
         id = {testId}
         onValueUpdated = {mockOnChange}
         disabled = {true}
-    />)
-        .toJSON();
+    />);
     expect(input).toMatchSnapshot();
 });
 
 test('Autocomplete choices', () => {
-    const input = create(<InputString
+    const input = render(<InputString
         id = {testId}
         onValueUpdated = {mockOnChange}
-        autocompleteChoices = {[{label: "test", value: "test"},
-            {label: "test1", value: "test1"}]}
-    />)
-        .toJSON();
+        autocompleteChoices = {[{ label: 'test', value: 'test' },
+            { label: 'test1', value: 'test1' }]}
+    />);
     expect(input).toMatchSnapshot();
 });
 
 test('Default and initial empty value', () => {
-    const value = "";
+    const value = '';
     const { getByLabelText } = render(
-    <div>
-        <InputString
-            id = {testId}
-            onValueUpdated = {mockOnChange}
-            value = {value}
-        />
-        <label htmlFor={testId}>{testLabel}</label>
-    </div>);
+        <div>
+            <InputString
+                id = {testId}
+                onValueUpdated = {mockOnChange}
+                value = {value}
+            />
+            <label htmlFor={testId}>{testLabel}</label>
+        </div>);
     const input = getByLabelText(testLabel) as HTMLInputElement;
     expect(input.value).toBe(value);
 });
 
 test('Call deprecated onChange', () => {
     const { getByLabelText } = render(
-    <div>
-        <InputString
-            id = {testId}
-            onValueChange = {mockOnChange}
-        />
-        <label htmlFor={testId}>{testLabel}</label>
-    </div>);
+        <div>
+            <InputString
+                id = {testId}
+                onValueChange = {mockOnChange}
+            />
+            <label htmlFor={testId}>{testLabel}</label>
+        </div>);
     const input = getByLabelText(testLabel) as HTMLInputElement;
-    const newText = "new text";
-    fireEvent.change(input, {target: { value: newText}});
+    const newText = 'new text';
+    fireEvent.change(input, { target: { value: newText } });
     expect(mockOnChange).toHaveBeenCalledTimes(1);
 });
 
 test('Call onValueUpdated', () => {
     const { getByLabelText } = render(
-    <div>
-        <InputString
-            id = {testId}
-            onValueUpdated = {mockOnChange}
-        />
-        <label htmlFor={testId}>{testLabel}</label>
-    </div>);
+        <div>
+            <InputString
+                id = {testId}
+                onValueUpdated = {mockOnChange}
+            />
+            <label htmlFor={testId}>{testLabel}</label>
+        </div>);
     const input = getByLabelText(testLabel) as HTMLInputElement;
-    const newText = "new text";
-    fireEvent.change(input, {target: { value: newText}});
+    const newText = 'new text';
+    fireEvent.change(input, { target: { value: newText } });
     expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenCalledWith({value: newText, valid: true})
+    expect(mockOnChange).toHaveBeenCalledWith({ value: newText, valid: true });
 });
 
 test('type check validity', () => {
@@ -119,7 +115,7 @@ test('type check validity', () => {
     />);
 
     // Validate initial values
-    const inputElements = stringInput.find({id: `${testId}`, type: 'number'});
+    const inputElements = stringInput.find({ id: `${testId}`, type: 'number' });
     expect(inputElements).toBeTruthy();
     const inputElement = inputElements.last();
     expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe(originalIntValue);
@@ -139,8 +135,8 @@ test('type check validity', () => {
     inputElement.getDOMNode<HTMLInputElement>().value = newIntValue;
     inputElement.simulate('change');
     expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(mockOnChange).toHaveBeenLastCalledWith({value: newIntValue, valid: true});
+    expect(mockOnChange).toHaveBeenLastCalledWith({ value: newIntValue, valid: true });
     //expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe(newIntValue);
-    
-})
+
+});
 

@@ -59,7 +59,7 @@ const fileUploaderHOC = <P,>(
                 uploadStatus: { status: 'notUploaded' }
             };
 
-            this.fileImportRef = React.createRef();
+            this.fileImportRef = React.createRef() as React.RefObject<HTMLInputElement>;
             this.fileUploader = new SocketIOFileClient(serviceLocator.socketEventManager._eventManager);
 
             this.onFileUploadStart = this.onFileUploadStart.bind(this);

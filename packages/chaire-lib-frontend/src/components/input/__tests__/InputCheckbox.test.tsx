@@ -46,7 +46,7 @@ describe('Checkboxes', () => {
             id = {testId}
             onValueChange = {mockOnChange}
             choices = {[]}
-        />);
+        /> as any);
         expect(container.firstChild).toMatchSnapshot();
     });
 

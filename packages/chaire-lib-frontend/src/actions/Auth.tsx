@@ -8,9 +8,9 @@ import { BaseUser } from 'chaire-lib-common/lib/services/user/userType';
 import appConfiguration from '../config/application.config';
 import { toCliUser } from '../services/auth/user';
 import { AuthAction, AuthActionTypes } from '../store/auth';
-import { History, Location } from 'history';
 import Preferences from 'chaire-lib-common/lib/config/Preferences';
 import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
+import { Location, NavigateFunction } from 'react-router-dom';
 
 // Required permissions to show user information in the header menu. For some basic user roles, like anonymous users, user information may not be wanted.
 let showUserInfoPerm:
@@ -47,14 +47,14 @@ export const logout = (): AuthAction => ({
     register: false
 });
 
-export const redirectAfterLogin = (user: BaseUser, history: History, location?: Location, referrer?: string) => {
+export const redirectAfterLogin = (user: BaseUser, location: Location, navigate: NavigateFunction) => {
     const requestedPath =
         location && location.state && (location.state as any).referrer ? (location.state as any).referrer : undefined;
-    history.push(requestedPath ? requestedPath : user.homePage ? user.homePage : appConfiguration.homePage);
+    return navigate(requestedPath ? requestedPath : user.homePage ? user.homePage : appConfiguration.homePage);
 };
 
 export type LoginData = { usernameOrEmail: string; password: string };
-export const startLogin = (data: LoginData, history: History, location: Location, callback?: () => void) => {
+export const startLogin = (data: LoginData, location: Location, navigate: NavigateFunction, callback?: () => void) => {
     return async (dispatch) => {
         try {
             const response = await fetch('/login', {
@@ -72,14 +72,14 @@ export const startLogin = (data: LoginData, history: History, location: Location
                     if (typeof callback === 'function') {
                         dispatch(callback());
                     }
-                    redirectAfterLogin(user, history, location);
+                    redirectAfterLogin(user);
                 } else {
                     dispatch(login(null, false, false, true));
                 }
             } else if (response.status === 401) {
                 dispatch(login(null, false, false, true));
                 // Unconfirmed user, redirect to proper page
-                history.push('/unconfirmed');
+                navigate('/unconfirmed');
             } else {
                 // Any other response status should not authenticate but still give feedback to the user
                 dispatch(login(null, false, false, true));
@@ -91,7 +91,8 @@ export const startLogin = (data: LoginData, history: History, location: Location
     };
 };
 
-export const startLogout = (history: History) => {
+export const startLogout = () => {
+    const navigate = useNavigate();
     return async (dispatch) => {
         try {
             const response = await fetch('/logout', { credentials: 'include' });
@@ -99,8 +100,7 @@ export const startLogout = (history: History) => {
                 const body = await response.json();
                 if (body.loggedOut === true) {
                     dispatch(logout());
-                    history.push('/login');
-                } else {
+                    navigate('/login');
                 }
             } else if (response.status === 401) {
                 //return { user: null };
@@ -113,7 +113,8 @@ export const startLogout = (history: History) => {
 };
 
 export type RegisterData = { username: string; email: string; generatedPassword: string | null; password: string };
-export const startRegisterWithPassword = (data: RegisterData, history: History, callback?: () => void) => {
+export const startRegisterWithPassword = (data: RegisterData, callback?: () => void) => {
+    const navigate = useNavigate();
     return async (dispatch) => {
         try {
             const response = await fetch('/register', {
@@ -131,14 +132,14 @@ export const startRegisterWithPassword = (data: RegisterData, history: History, 
                     if (typeof callback === 'function') {
                         dispatch(callback());
                     }
-                    redirectAfterLogin(user, history);
+                    redirectAfterLogin(user);
                 } else {
                     dispatch(login(null, false, true, false));
                 }
             } else if (response.status === 401) {
                 // Unconfirmed user, redirect to proper page
                 dispatch(login(null, false, true, false));
-                history.push('/unconfirmed');
+                navigate('/unconfirmed');
             } else {
                 dispatch(login(null, false, true, false));
             }
@@ -179,7 +180,7 @@ export const startConfirmUser = (data: ConfirmData, callback?: ConfirmCallbackTy
 };
 
 export type ForgotPwdData = { email: string };
-export const startForgotPasswordRequest = (data: ForgotPwdData, _history: History) => {
+export const startForgotPasswordRequest = (data: ForgotPwdData) => {
     return async (dispatch) => {
         try {
             const response = await fetch('/forgot', {
@@ -227,11 +228,11 @@ export const startResetPassword = (data) => {
 export type LoginPwdlessData = { destination: string };
 export const startPwdLessLogin = (
     data: LoginPwdlessData,
-    history: History,
-    location: Location,
     callback?: () => void
 ) => {
     return async (dispatch) => {
+        const location = useLocation();
+        const navigate = useNavigate();
         try {
             const requestBody: LoginPwdlessData & { referrer?: string } = { ...data };
             if (location && location.state && (location.state as any).referrer) {
@@ -255,9 +256,9 @@ export const startPwdLessLogin = (
                         dispatch(callback());
                     }
                     // TODO this should be configurable
-                    redirectAfterLogin(user, history, location);
+                    redirectAfterLogin(user);
                 } else if (success === true) {
-                    history.push('/checkMagicEmail');
+                    navigate('/checkMagicEmail');
                 } else {
                     dispatch(login(null, false, false, true));
                 }
@@ -272,7 +273,8 @@ export const startPwdLessLogin = (
     };
 };
 
-export const startPwdLessVerify = (token: string, history: History, callback?: () => void) => {
+export const startPwdLessVerify = (token: string, callback?: () => void) => {
+    const navigate = useNavigate();
     return async (dispatch) => {
         try {
             const response = await fetch(`/pwdless/verify?token=${token}`, {
@@ -287,9 +289,9 @@ export const startPwdLessVerify = (token: string, history: History, callback?: (
                         dispatch(callback());
                     }
                     if (referrer) {
-                        history.push(referrer);
+                        navigate(referrer);
                     } else {
-                        redirectAfterLogin(user, history);
+                        redirectAfterLogin(user);
                     }
                 } else {
                     dispatch(login(null, false, false, true));
@@ -305,7 +307,7 @@ export const startPwdLessVerify = (token: string, history: History, callback?: (
     };
 };
 
-export const startAnonymousLogin = (history: History, location: Location, callback?: () => void) => {
+export const startAnonymousLogin = (callback?: () => void) => {
     return async (dispatch) => {
         try {
             const response = await fetch('/anonymous', {
@@ -320,7 +322,7 @@ export const startAnonymousLogin = (history: History, location: Location, callba
                     if (typeof callback === 'function') {
                         dispatch(callback());
                     }
-                    redirectAfterLogin(user, history, location);
+                    redirectAfterLogin(user);
                 } else {
                     dispatch(login(null, false, true, false));
                 }
@@ -336,7 +338,8 @@ export const startAnonymousLogin = (history: History, location: Location, callba
     };
 };
 
-export const resetUserProfile = (history: History) => {
+export const resetUserProfile = () => {
+    const navigate = useNavigate();
     return async (dispatch) => {
         try {
             // reset user pref on server
@@ -348,7 +351,7 @@ export const resetUserProfile = (history: History) => {
 
             if (response.status === 200) {
                 const defaultPath = appConfiguration.homePage;
-                history.push(defaultPath);
+                navigate(defaultPath);
             }
         } catch (err) {
             console.log('Error reset user.', err);

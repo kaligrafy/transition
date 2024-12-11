@@ -4,7 +4,7 @@
  * This file is licensed under the MIT License.
  * License text available at https://opensource.org/licenses/MIT
  */
-import React from 'react';
+import React, { JSX } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import _isEqual from 'lodash/isEqual';
 
@@ -70,6 +70,8 @@ export class DayRange extends React.Component<DayRangeProps> {
                     type="checkbox"
                     id={`${this.props.id}_${day}`}
                     value={day}
+                    title={day}
+                    name={day}
                     checked={isChecked}
                     onChange={(e) => this.handleDayChange(e, day)}
                     disabled={this.props.disabled}

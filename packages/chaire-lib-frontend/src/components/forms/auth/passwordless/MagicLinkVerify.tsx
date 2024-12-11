@@ -7,16 +7,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { History, Location } from 'history';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import FormErrors from '../../../pageParts/FormErrors';
 import { startPwdLessVerify } from '../../../../actions/Auth';
 
 export interface MagicLinkVerifyProps {
     isAuthenticated?: boolean;
-    history: History;
-    location: Location;
     startPwdLessVerify: (token: string, callback?: () => void) => void;
     login?: boolean;
     headerText?: string;
@@ -25,11 +22,13 @@ export interface MagicLinkVerifyProps {
 export const MagicLinkVerify: React.FunctionComponent<MagicLinkVerifyProps & WithTranslation> = (
     props: MagicLinkVerifyProps & WithTranslation
 ) => {
-    const params = new URLSearchParams(props.location.search);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const params = new URLSearchParams(location.search);
     const token = params.get('token');
     if (!token) {
         console.log('No token specified');
-        props.history.push('/login');
+        navigate('/login');
     }
 
     React.useEffect(() => {
@@ -57,7 +56,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, props: Omit<MagicLinkVerifyProps, 'startPwdLessVerify'>) => ({
     startPwdLessVerify: (token: string, callback?: () => void) =>
-        dispatch(startPwdLessVerify(token, props.history, callback))
+        dispatch(startPwdLessVerify(token, callback))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation('auth')(MagicLinkVerify));

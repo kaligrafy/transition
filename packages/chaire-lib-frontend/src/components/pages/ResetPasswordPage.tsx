@@ -16,7 +16,6 @@ import { ErrorMessage } from 'chaire-lib-common/lib/utils/TrError';
 
 export interface ResetPasswordPageProps extends WithTranslation {
     isAuthenticated: boolean;
-    history: History;
     startResetPassword: any;
     token: string;
     status?: 'Confirmed' | 'NotFound' | 'Expired' | 'PasswordChanged' | 'Error';
@@ -87,8 +86,7 @@ export class ResetPasswordPage extends React.Component<ResetPasswordPageProps, R
                 {
                     token: this.props.token,
                     password: this.state.password
-                },
-                this.props.history
+                }
             );
         }
     };
@@ -204,7 +202,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, props) => ({
-    startResetPassword: (data, history) => dispatch(startResetPassword(data))
+    startResetPassword: (data) => dispatch(startResetPassword(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation('auth')(ResetPasswordPage));

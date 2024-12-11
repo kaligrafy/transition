@@ -10,7 +10,7 @@ import { RouteProps } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import { CliUser } from 'chaire-lib-common/lib/services/user/userType';
 
-interface AdminRouteProps extends RouteProps {
+type AdminRouteProps = RouteProps & {
     isAuthenticated: boolean;
     component: any;
     componentProps: { [prop: string]: unknown };

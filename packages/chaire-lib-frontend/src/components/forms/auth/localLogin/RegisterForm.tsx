@@ -7,7 +7,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { History } from 'history';
 
 import { startRegisterWithPassword, RegisterData } from '../../../../actions/Auth';
 import Button from '../../../input/Button';
@@ -18,7 +17,6 @@ import { _isEmail } from 'chaire-lib-common/lib/utils/LodashExtensions';
 
 export interface RegisterFormProps {
     isAuthenticated?: boolean;
-    history: History;
     startRegisterWithPassword: (data: RegisterData, callback?: () => void) => void;
     withCaptcha?: boolean;
     withEmailOnly?: boolean;
@@ -248,7 +246,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, props: Omit<RegisterFormProps, 'startRegisterWithPassword'>) => ({
     startRegisterWithPassword: (data: RegisterData, callback?: () => void) =>
-        dispatch(startRegisterWithPassword(data, props.history, callback))
+        dispatch(startRegisterWithPassword(data, callback))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation('auth')(RegisterForm));

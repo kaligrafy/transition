@@ -4,7 +4,7 @@
  * This file is licensed under the MIT License.
  * License text available at https://opensource.org/licenses/MIT
  */
-import React from 'react';
+import React, { JSX } from 'react';
 
 interface choiceType {
     value: string | boolean;
@@ -102,7 +102,7 @@ class InputRadio extends React.Component<InputRadioProps> {
         }
 
         const radioChoices: JSX.Element[] = this.props.choices.map((choice) => {
-            const inputRadioRef: React.RefObject<HTMLInputElement> = React.createRef();
+            const inputRadioRef: React.RefObject<HTMLInputElement> = React.createRef() as React.RefObject<HTMLInputElement>;
             const valueStr = choice.value.toString();
             const id = `${this.props.id}_${valueStr}`;
             return (

@@ -7,14 +7,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { History } from 'history';
-
+import { useNavigate } from 'react-router-dom';
 import appConfiguration from '../../config/application.config';
 import RegisterForm from '../forms/auth/localLogin/RegisterForm';
 
 export interface RegisterPageProps extends WithTranslation {
     isAuthenticated: boolean;
-    history: History;
     config: {
         // @deprecated Use the value in auth instead
         allowRegistration?: boolean;
@@ -31,9 +29,10 @@ export interface RegisterPageProps extends WithTranslation {
 
 export class RegisterPage extends React.Component<RegisterPageProps> {
     constructor(props: RegisterPageProps) {
+        const navigate = useNavigate();
         super(props);
         if (this.props.isAuthenticated) {
-            this.props.history.push(appConfiguration.homePage);
+            navigate(appConfiguration.homePage);
         }
         this.state = {};
     }
@@ -49,7 +48,6 @@ export class RegisterPage extends React.Component<RegisterPageProps> {
         return (
             <React.Fragment>
                 <RegisterForm
-                    history={this.props.history}
                     withCaptcha={true}
                     withEmailOnly={
                         this.props.config.registerWithEmailOnly ||

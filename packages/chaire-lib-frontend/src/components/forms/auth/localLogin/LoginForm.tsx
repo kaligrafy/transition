@@ -7,7 +7,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { History, Location } from 'history';
 
 import FormErrors from '../../../pageParts/FormErrors';
 import { startLogin, LoginData } from '../../../../actions/Auth';
@@ -15,8 +14,6 @@ import Button from '../../../input/Button';
 
 export interface LoginPageProps {
     isAuthenticated?: boolean;
-    history: History;
-    location: Location;
     startLogin: (data: LoginData, callback?: () => void) => void;
     login?: boolean;
     withForgotPassword?: boolean;
@@ -149,7 +146,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, props: Omit<LoginPageProps, 'startLogin'>) => ({
     startLogin: (data: LoginData, callback?: () => void) =>
-        dispatch(startLogin(data, props.history, props.location, callback))
+        dispatch(startLogin(data, callback))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation('auth')(LoginPage));

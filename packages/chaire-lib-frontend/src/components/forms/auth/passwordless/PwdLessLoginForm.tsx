@@ -7,7 +7,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { History, Location } from 'history';
 
 import FormErrors from '../../../pageParts/FormErrors';
 import { startPwdLessLogin, LoginPwdlessData } from '../../../../actions/Auth';
@@ -16,8 +15,6 @@ import { _isBlank, _isEmail } from 'chaire-lib-common/lib/utils/LodashExtensions
 
 export interface LoginPageProps {
     isAuthenticated?: boolean;
-    history: History;
-    location: Location;
     startPwdLessLogin: (data: LoginPwdlessData, callback?: () => void) => void;
     login?: boolean;
     headerText?: string;
@@ -125,7 +122,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, props: Omit<LoginPageProps, 'startPwdLessLogin'>) => ({
     startPwdLessLogin: (data: LoginPwdlessData, callback?: () => void) =>
-        dispatch(startPwdLessLogin(data, props.history, props.location, callback))
+        dispatch(startPwdLessLogin(data, callback))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation('auth')(LoginPage));

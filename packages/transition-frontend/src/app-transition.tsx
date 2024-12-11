@@ -54,19 +54,20 @@ const contributions = [
 const jsx = (
     <Provider store={store}>
         <I18nextProvider i18n={i18n}>
-            <Router history={history}>
+            <Router location={history.location} navigator={history}>
                 <TransitionRouter contributions={contributions} config={config} mainMap={MainMap as any} />
             </Router>
         </I18nextProvider>
     </Provider>
 );
 
-createRoot(document.getElementById('app') as HTMLElement).render(<LoadingPage />);
+const root = createRoot(document.getElementById('app') as HTMLElement);
+root.render(<LoadingPage />);
 
 let hasRendered = false;
 const renderApp = () => {
     if (!hasRendered) {
-        createRoot(document.getElementById('app') as HTMLElement).render(jsx);
+        root.render(jsx);
         hasRendered = true;
     }
 };

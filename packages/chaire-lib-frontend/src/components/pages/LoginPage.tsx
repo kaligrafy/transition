@@ -7,14 +7,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { History, Location } from 'history';
 import appConfiguration from '../../config/application.config';
 import LoginForm from '../forms/auth/localLogin/LoginForm';
+import { useNavigate } from 'react-router-dom';
 
 export interface LoginPageProps {
     isAuthenticated?: boolean;
-    history: History;
-    location: Location;
     config: {
         allowRegistration?: boolean;
         forgotPasswordPage?: boolean;
@@ -31,9 +29,11 @@ export interface LoginPageProps {
 export const LoginPage: React.FunctionComponent<LoginPageProps & WithTranslation> = (
     props: LoginPageProps & WithTranslation
 ) => {
+    const navigate = useNavigate();
+
     React.useEffect(() => {
         if (props.isAuthenticated) {
-            props.history.push(appConfiguration.homePage);
+            navigate(appConfiguration.homePage);
         }
     }, []);
 
@@ -43,8 +43,6 @@ export const LoginPage: React.FunctionComponent<LoginPageProps & WithTranslation
     return (
         <React.Fragment>
             <LoginForm
-                history={props.history}
-                location={props.location}
                 withForgotPassword={
                     props.config.forgotPasswordPage === true ||
                     props.config.auth?.localLogin?.forgotPasswordPage === true

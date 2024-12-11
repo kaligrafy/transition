@@ -8,7 +8,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { History } from 'history';
 
 import { startForgotPasswordRequest, ForgotPwdData } from '../../actions/Auth';
 import Button, { ButtonProps } from '../input/Button';
@@ -17,7 +16,6 @@ import { ErrorMessage } from 'chaire-lib-common/lib/utils/TrError';
 
 export interface ForgotPasswordPageProps extends WithTranslation {
     isAuthenticated: boolean;
-    history: History;
     startForgotPasswordRequest: (data: ForgotPwdData) => void;
     emailExists: boolean;
     config: {
@@ -161,7 +159,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch, props: Omit<ForgotPasswordPageProps, 'startForgotPasswordRequest'>) => ({
-    startForgotPasswordRequest: (data: ForgotPwdData) => dispatch(startForgotPasswordRequest(data, props.history))
+    startForgotPasswordRequest: (data: ForgotPwdData) => dispatch(startForgotPasswordRequest(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation('auth')(ForgotPasswordPage));

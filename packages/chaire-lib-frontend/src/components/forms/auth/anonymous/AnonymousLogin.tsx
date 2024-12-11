@@ -6,14 +6,11 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import { History, Location } from 'history';
 
 import { startAnonymousLogin } from '../../../../actions/Auth';
 
 export interface AnonymousLoginProps {
     isAuthenticated?: boolean;
-    history: History;
-    location: Location;
     startAnonymousLogin: (callback?: () => void) => void;
     login?: boolean;
 }
@@ -31,7 +28,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, props: Omit<AnonymousLoginProps, 'startAnonymousLogin'>) => ({
     startAnonymousLogin: (callback?: () => void) =>
-        dispatch(startAnonymousLogin(props.history, props.location, callback))
+        dispatch(startAnonymousLogin(callback))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnonymousLogin);

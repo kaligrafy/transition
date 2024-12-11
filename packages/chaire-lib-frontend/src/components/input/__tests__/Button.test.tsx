@@ -8,7 +8,6 @@ import * as React from 'react';
 import { Button } from '../Button';
 import { render, fireEvent } from '@testing-library/react';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-import { create } from 'node:domain';
 
 const mockOnClick = jest.fn();
 const testLabel = 'Test';

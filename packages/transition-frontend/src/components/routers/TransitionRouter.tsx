@@ -5,7 +5,8 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import React from 'react';
-import { Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import DashboardTransition from '../dashboard/TransitionDashboard';
 import { MainMapProps } from '../map/TransitionMainMap';
@@ -21,23 +22,28 @@ import PrivateRoute from 'chaire-lib-frontend/lib/components/routers/PrivateRout
 import PublicRoute from 'chaire-lib-frontend/lib/components/routers/PublicRoute';
 import { DashboardContribution } from 'chaire-lib-frontend/lib/services/dashboard/DashboardContribution';
 
-interface TransitionRouterProps extends RouteComponentProps {
+type TransitionRouterProps = {
     contributions: DashboardContribution[];
-    // TODO Map component should not be passed directly
     mainMap: React.ComponentType<MainMapProps>;
     config: any;
 }
 
 const TransitionRouter: React.FunctionComponent<TransitionRouterProps> = (props: TransitionRouterProps) => {
+    //const navigate = useNavigate();
+    //const location = useLocation();
+    const auth = useSelector((state: any) => ({
+        isAuthenticated: state.auth.isAuthenticated,
+        user: state.auth.user
+    }));
+
     return (
         <React.Fragment>
-            <Switch>
-                <PrivateRoute
+            <Routes>
+                {/*<PrivateRoute
                     path="/"
                     component={DashboardTransition}
                     componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
                     config={props.config}
-                    exact={true}
                 />
                 <PublicRoute path="/login" component={LoginPage} config={props.config} />
                 <PublicRoute path="/register" component={RegisterPage} config={props.config} />
@@ -47,31 +53,63 @@ const TransitionRouter: React.FunctionComponent<TransitionRouterProps> = (props:
                     path="/verify/:token"
                     component={VerifyPage}
                     config={props.config}
-                    queryString={props.location.search}
+                    queryString={location.search}
                 />
                 <PublicRoute
                     path="/reset/:token"
                     component={ResetPasswordPage}
                     config={props.config}
-                    queryString={props.location.search}
+                    queryString={location.search}
                 />
-                <PublicRoute path="/unauthorized" component={UnauthorizedPage} />
-                <PrivateRoute
+                <PublicRoute path="/unauthorized" component={UnauthorizedPage} />*/
+                }
+                <Route path="/login" element={
+                    <PublicRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        component={LoginPage}
+                        config={props.config}
+                    />
+                } />
+                <Route
+                    path="/"
+                    element={
+                        <PrivateRoute
+                            isAuthenticated={auth.isAuthenticated}
+                            user={auth.user}
+                            component={DashboardTransition}
+                            componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
+                            config={props.config}
+                        />
+                    }
+                />
+                <Route
                     path="/dashboard"
-                    component={DashboardTransition}
-                    componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
-                    config={props.config}
+                    element={
+                        <PrivateRoute
+                            isAuthenticated={auth.isAuthenticated}
+                            user={auth.user}
+                            component={DashboardTransition}
+                            componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
+                            config={props.config}
+                        />
+                    }
                 />
-                <PrivateRoute
+                <Route
                     path="/home"
-                    component={DashboardTransition}
-                    componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
-                    config={props.config}
+                    element={
+                        <PrivateRoute
+                            isAuthenticated={auth.isAuthenticated}
+                            user={auth.user}
+                            component={DashboardTransition}
+                            componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
+                            config={props.config}
+                        />
+                    }
                 />
-                <Route component={NotFoundPage} config={props.config} />
-            </Switch>
+                <Route path="*" element={<NotFoundPage />} />
+            </Routes>
         </React.Fragment>
     );
 };
 
-export default withRouter(TransitionRouter);
+export default TransitionRouter;

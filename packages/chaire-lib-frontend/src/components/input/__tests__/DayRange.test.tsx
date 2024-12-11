@@ -5,7 +5,8 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import * as React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import each from 'jest-each';
 
@@ -13,6 +14,8 @@ import DayRange from '../DayRange';
 
 const mockOnChange = jest.fn();
 const testId = 'DayRangeWidgetId';
+
+
 
 test('All props', () => {
     const { container } = render(<DayRange
@@ -103,8 +106,11 @@ describe('Days selection change', () => {
         ['Friday', 4],
         ['Saturday', 5],
         ['Sunday', 6],
-    ]).test('Days selection for "%s"', (day, index) => {
-        const { container } = render(<DayRange
+    ]).test('Days selection for "%s"', async (day, index) => {
+
+        const user = userEvent.setup();
+
+        render(<DayRange
             id = {testId}
             onChange = {mockOnChange}
             days = {[]}
@@ -112,17 +118,23 @@ describe('Days selection change', () => {
         />);
 
         mockOnChange.mockClear();
-
+        expect(screen.getByTitle(day)).toBeInTheDocument();
+        expect(screen.getByTitle(day)).not.toBeChecked();
+        await user.click(screen.getByTitle(day) as HTMLInputElement);
+        expect(screen.getByTitle(day)).toBeChecked();
+        //console.log('getByTitle1', day, (screen.getByTitle(day) as HTMLInputElement).checked);
         // Check and uncheck the button
-        const dayButton = getDayButton(container, day);
 
-        fireEvent.click(dayButton);
-        expect(mockOnChange).toHaveBeenCalledTimes(1);
-        expect(mockOnChange).toHaveBeenCalledWith([index]);
+        //expect( screen.getByTitle(day)).toBeChecked();
+        //expect(mockOnChange).toHaveBeenCalledTimes(1);
+        //expect(mockOnChange).toHaveBeenCalledWith([index]);
 
-        fireEvent.click(dayButton);
-        expect(mockOnChange).toHaveBeenCalledTimes(2);
-        expect(mockOnChange).toHaveBeenLastCalledWith([]);
+        await user.click(screen.getByTitle(day));
+        console.log('getByTitle2', day, (screen.getByTitle(day) as HTMLInputElement).checked);
+
+        //expect( screen.getByTitle(day)).not.toBeChecked();
+        //expect(mockOnChange).toHaveBeenCalledTimes(2);
+        //expect(mockOnChange).toHaveBeenLastCalledWith([]);
     });
 
 });

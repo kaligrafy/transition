@@ -47,6 +47,8 @@ exports[`All props 1`] = `
       <input
         checked=""
         id="DayRangeWidgetId_Monday"
+        name="Monday"
+        title="Monday"
         type="checkbox"
         value="Monday"
       />
@@ -62,6 +64,8 @@ exports[`All props 1`] = `
       <input
         checked=""
         id="DayRangeWidgetId_Tuesday"
+        name="Tuesday"
+        title="Tuesday"
         type="checkbox"
         value="Tuesday"
       />
@@ -77,6 +81,8 @@ exports[`All props 1`] = `
       <input
         checked=""
         id="DayRangeWidgetId_Wednesday"
+        name="Wednesday"
+        title="Wednesday"
         type="checkbox"
         value="Wednesday"
       />
@@ -91,6 +97,8 @@ exports[`All props 1`] = `
     >
       <input
         id="DayRangeWidgetId_Thursday"
+        name="Thursday"
+        title="Thursday"
         type="checkbox"
         value="Thursday"
       />
@@ -105,6 +113,8 @@ exports[`All props 1`] = `
     >
       <input
         id="DayRangeWidgetId_Friday"
+        name="Friday"
+        title="Friday"
         type="checkbox"
         value="Friday"
       />
@@ -119,6 +129,8 @@ exports[`All props 1`] = `
     >
       <input
         id="DayRangeWidgetId_Saturday"
+        name="Saturday"
+        title="Saturday"
         type="checkbox"
         value="Saturday"
       />
@@ -133,6 +145,8 @@ exports[`All props 1`] = `
     >
       <input
         id="DayRangeWidgetId_Sunday"
+        name="Sunday"
+        title="Sunday"
         type="checkbox"
         value="Sunday"
       />
@@ -195,6 +209,8 @@ exports[`Disabled 1`] = `
         checked=""
         disabled=""
         id="DayRangeWidgetId_Monday"
+        name="Monday"
+        title="Monday"
         type="checkbox"
         value="Monday"
       />
@@ -211,6 +227,8 @@ exports[`Disabled 1`] = `
         checked=""
         disabled=""
         id="DayRangeWidgetId_Tuesday"
+        name="Tuesday"
+        title="Tuesday"
         type="checkbox"
         value="Tuesday"
       />
@@ -227,6 +245,8 @@ exports[`Disabled 1`] = `
         checked=""
         disabled=""
         id="DayRangeWidgetId_Wednesday"
+        name="Wednesday"
+        title="Wednesday"
         type="checkbox"
         value="Wednesday"
       />
@@ -242,6 +262,8 @@ exports[`Disabled 1`] = `
       <input
         disabled=""
         id="DayRangeWidgetId_Thursday"
+        name="Thursday"
+        title="Thursday"
         type="checkbox"
         value="Thursday"
       />
@@ -257,6 +279,8 @@ exports[`Disabled 1`] = `
       <input
         disabled=""
         id="DayRangeWidgetId_Friday"
+        name="Friday"
+        title="Friday"
         type="checkbox"
         value="Friday"
       />
@@ -272,6 +296,8 @@ exports[`Disabled 1`] = `
       <input
         disabled=""
         id="DayRangeWidgetId_Saturday"
+        name="Saturday"
+        title="Saturday"
         type="checkbox"
         value="Saturday"
       />
@@ -287,6 +313,8 @@ exports[`Disabled 1`] = `
       <input
         disabled=""
         id="DayRangeWidgetId_Sunday"
+        name="Sunday"
+        title="Sunday"
         type="checkbox"
         value="Sunday"
       />
@@ -311,6 +339,8 @@ exports[`Do not show dropdown 1`] = `
       <input
         checked=""
         id="DayRangeWidgetId_Monday"
+        name="Monday"
+        title="Monday"
         type="checkbox"
         value="Monday"
       />
@@ -326,6 +356,8 @@ exports[`Do not show dropdown 1`] = `
       <input
         checked=""
         id="DayRangeWidgetId_Tuesday"
+        name="Tuesday"
+        title="Tuesday"
         type="checkbox"
         value="Tuesday"
       />
@@ -341,6 +373,8 @@ exports[`Do not show dropdown 1`] = `
       <input
         checked=""
         id="DayRangeWidgetId_Wednesday"
+        name="Wednesday"
+        title="Wednesday"
         type="checkbox"
         value="Wednesday"
       />
@@ -355,6 +389,8 @@ exports[`Do not show dropdown 1`] = `
     >
       <input
         id="DayRangeWidgetId_Thursday"
+        name="Thursday"
+        title="Thursday"
         type="checkbox"
         value="Thursday"
       />
@@ -369,6 +405,8 @@ exports[`Do not show dropdown 1`] = `
     >
       <input
         id="DayRangeWidgetId_Friday"
+        name="Friday"
+        title="Friday"
         type="checkbox"
         value="Friday"
       />
@@ -383,6 +421,8 @@ exports[`Do not show dropdown 1`] = `
     >
       <input
         id="DayRangeWidgetId_Saturday"
+        name="Saturday"
+        title="Saturday"
         type="checkbox"
         value="Saturday"
       />
@@ -397,6 +437,8 @@ exports[`Do not show dropdown 1`] = `
     >
       <input
         id="DayRangeWidgetId_Sunday"
+        name="Sunday"
+        title="Sunday"
         type="checkbox"
         value="Sunday"
       />

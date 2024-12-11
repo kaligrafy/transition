@@ -5,13 +5,12 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import React from 'react';
-import { History } from 'history';
 import Loadable from 'react-loadable';
+import { useNavigate } from 'react-router-dom';
 import Loader from 'react-spinners/HashLoader';
 
 export interface UsersPageProps {
     isAuthenticated: boolean;
-    history: History;
     // TODO Type the user
     user: { [key: string]: any };
 }
@@ -27,10 +26,11 @@ const UsersComponent = Loadable({
 
 class UsersPage extends React.Component<UsersPageProps> {
     constructor(props) {
+        const navigate = useNavigate();
         super(props);
 
         if (this.props.isAuthenticated && this.props.user.is_admin) {
-            this.props.history.push('/admin/users');
+            navigate('/admin/users');
         }
     }
 

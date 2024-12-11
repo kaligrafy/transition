@@ -4,7 +4,7 @@
  * This file is licensed under the MIT License.
  * License text available at https://opensource.org/licenses/MIT
  */
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { createRoot } from 'react-dom/client';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import MapboxGL from 'mapbox-gl';
@@ -54,7 +54,7 @@ interface MainMapState {
  * chaire-lib and offer the possibility to pass the application modules when the
  * API for it has stabilised.
  */
-class MainMap extends React.Component<MainMapProps & WithTranslation, MainMapState> {
+class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWithChildren, MainMapState> {
     private layerManager: MapLayerManager;
     private pathLayerManager: PathMapLayerManager;
     private defaultZoomArray: [number];

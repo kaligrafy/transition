@@ -14,7 +14,6 @@ import ConfirmModal from '../modal/ConfirmModal';
 import { startLogout } from '../../actions/Auth';
 import config from 'chaire-lib-common/lib/config/shared/project.config';
 import appConfiguration, { UserMenuItem } from '../../config/application.config';
-import { History } from 'history';
 import { CliUser } from 'chaire-lib-common/lib/services/user/userType';
 
 interface HeaderProps {
@@ -22,7 +21,6 @@ interface HeaderProps {
     path: any;
     startLogout: () => void;
     appName: string;
-    history: History;
 }
 
 interface UserProps extends WithTranslation {
@@ -215,7 +213,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch, props: Omit<HeaderProps, 'startLogout'>) => ({
-    startLogout: () => dispatch(startLogout(props.history))
+    startLogout: () => dispatch(startLogout())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation('menu')(Header));

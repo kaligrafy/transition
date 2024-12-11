@@ -8,13 +8,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { History } from 'history';
 
 import { startConfirmUser, ConfirmData, ConfirmCallbackType } from '../../actions/Auth';
 
 export interface VerifyPageProps extends WithTranslation {
     isAuthenticated: boolean;
-    history: History;
     startConfirmUser: (data: ConfirmData, callback?: ConfirmCallbackType) => void;
     token: string;
 }

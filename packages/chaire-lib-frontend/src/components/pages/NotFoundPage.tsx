@@ -6,9 +6,9 @@
  */
 import React from 'react';
 import { Link } from 'react-router';
-import { useTranslation, WithTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-export const NotFoundPage: React.FunctionComponent<WithTranslation> = () => {
+export const NotFoundPage: React.FC = () => {
     const { t } = useTranslation('auth');
 
     return (

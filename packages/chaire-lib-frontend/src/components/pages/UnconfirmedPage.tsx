@@ -5,10 +5,10 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import React from 'react';
-import { useTranslation, WithTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 
-export const UnconfirmedPage: React.FunctionComponent<WithTranslation> = () => {
+export const UnconfirmedPage: React.FC = () => {
     const { t } = useTranslation('auth');
 
     return (

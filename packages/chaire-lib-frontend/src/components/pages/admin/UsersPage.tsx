@@ -6,7 +6,7 @@
  */
 import React from 'react';
 import Loadable from 'react-loadable';
-import { redirect, useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router';
 import Loader from 'react-spinners/HashLoader';
 
 export interface UsersPageProps {

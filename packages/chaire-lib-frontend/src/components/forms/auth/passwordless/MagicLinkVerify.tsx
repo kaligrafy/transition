@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Link, redirect, useLocation, useNavigate } from 'react-router-dom';
+import { Link, redirect, useLocation, useNavigate } from 'react-router';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 

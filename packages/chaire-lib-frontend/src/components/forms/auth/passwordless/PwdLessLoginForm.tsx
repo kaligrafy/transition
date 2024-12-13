@@ -9,7 +9,7 @@ import { _isBlank, _isEmail } from 'chaire-lib-common/lib/utils/LodashExtensions
 import { RootState } from '../../../../store/configureStore';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 
 type LoginPageProps = {
     headerText?: string;

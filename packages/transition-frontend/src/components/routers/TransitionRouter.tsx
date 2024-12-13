@@ -5,7 +5,7 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import React from 'react';
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router';
 import { useSelector } from 'react-redux';
 
 import DashboardTransition from '../dashboard/TransitionDashboard';

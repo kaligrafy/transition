@@ -10,7 +10,7 @@ import { toCliUser } from '../services/auth/user';
 import { AuthAction, AuthActionTypes } from '../store/auth';
 import Preferences from 'chaire-lib-common/lib/config/Preferences';
 import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
-import { Location, NavigateFunction, redirect } from 'react-router-dom';
+import { Location, NavigateFunction, redirect } from 'react-router';
 
 // Required permissions to show user information in the header menu. For some basic user roles, like anonymous users, user information may not be wanted.
 let showUserInfoPerm:

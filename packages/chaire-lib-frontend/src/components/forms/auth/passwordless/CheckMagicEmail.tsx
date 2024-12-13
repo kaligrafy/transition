@@ -6,7 +6,7 @@
  */
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const CheckMagicEmail: React.FC = () => {
     const { t } = useTranslation('auth');

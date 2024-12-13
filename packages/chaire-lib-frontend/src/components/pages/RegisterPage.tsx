@@ -7,7 +7,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { redirect, useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router';
 import appConfiguration from '../../config/application.config';
 import RegisterForm from '../forms/auth/localLogin/RegisterForm';
 

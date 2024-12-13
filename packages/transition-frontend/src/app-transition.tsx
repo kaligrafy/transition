@@ -9,7 +9,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { I18nextProvider } from 'react-i18next';
 import { createBrowserHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { BrowserRouter, Router } from 'react-router';
 
 import i18n from 'chaire-lib-frontend/lib/config/i18n.config';
 import TransitionRouter from './components/routers/TransitionRouter';
@@ -54,9 +54,9 @@ const contributions = [
 const jsx = (
     <Provider store={store}>
         <I18nextProvider i18n={i18n}>
-            <Router location={history.location} navigator={history}>
+            <BrowserRouter>
                 <TransitionRouter contributions={contributions} config={config} mainMap={MainMap as any} />
-            </Router>
+            </BrowserRouter>
         </I18nextProvider>
     </Provider>
 );

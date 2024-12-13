@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate, NavigateFunction } from 'react-router-dom';
+import { NavLink, useNavigate, NavigateFunction } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-business-days';

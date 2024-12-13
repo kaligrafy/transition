@@ -7,7 +7,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { startConfirmUser, ConfirmData, ConfirmCallbackType } from '../../actions/Auth';
 

@@ -5,7 +5,7 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import React, { PropsWithChildren } from 'react';
-import { Navigate, RouteProps } from 'react-router-dom';
+import { Navigate, RouteProps } from 'react-router';
 
 import { Header } from '../pageParts';
 import { CliUser } from 'chaire-lib-common/lib/services/user/userType';

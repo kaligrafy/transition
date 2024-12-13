@@ -5,7 +5,7 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import React from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import moment from 'moment-business-days';

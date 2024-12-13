@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';

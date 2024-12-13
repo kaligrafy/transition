@@ -26,7 +26,6 @@ const PublicRoute = ({ component: Component, children, ...rest }: PublicRoutePro
         <React.Fragment>
             <Header
                 path={rest.path as string}
-                user={rest.user as CliUser}
                 appName={rest.config?.appName as string}
             />
             <Component {...rest.componentProps} config={rest.config} />

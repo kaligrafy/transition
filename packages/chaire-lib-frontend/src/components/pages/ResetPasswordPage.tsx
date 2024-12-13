@@ -14,7 +14,7 @@ import FormErrors from '../pageParts/FormErrors';
 import { startResetPassword } from '../../actions/Auth';
 import { ErrorMessage } from 'chaire-lib-common/lib/utils/TrError';
 
-export interface ResetPasswordPageProps extends WithTranslation {
+export type ResetPasswordPageProps = WithTranslation & {
     isAuthenticated: boolean;
     startResetPassword: any;
     token: string;
@@ -27,7 +27,7 @@ type ResetPasswordState = {
     error?: ErrorMessage;
 };
 
-interface SimpleMessageProps extends WithTranslation {
+type SimpleMessageProps = WithTranslation & {
     message: string;
 }
 

@@ -6,7 +6,7 @@
  */
 import React from 'react';
 import Loadable from 'react-loadable';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import Loader from 'react-spinners/HashLoader';
 
 export interface UsersPageProps {
@@ -30,7 +30,7 @@ class UsersPage extends React.Component<UsersPageProps> {
         super(props);
 
         if (this.props.isAuthenticated && this.props.user.is_admin) {
-            navigate('/admin/users');
+            redirect('/admin/users');
         }
     }
 

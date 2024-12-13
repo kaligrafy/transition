@@ -10,7 +10,7 @@ import _isEqual from 'lodash/isEqual';
 
 import InputSelect from './InputSelect';
 
-export interface DayRangeProps extends WithTranslation {
+export type DayRangeProps = WithTranslation & {
     id: string;
     /** selection contains the number of the day, where 0 is monday */
     onChange: (selection: number[]) => void;

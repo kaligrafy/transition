@@ -6,12 +6,12 @@
  */
 import React, { JSX } from 'react';
 
-interface choiceType {
+type choiceType = {
     value: string | boolean;
     [key: string]: unknown;
-}
+};
 
-export interface InputRadioProps {
+export type InputRadioProps = {
     id: string;
     onValueChange?: (e: any) => void;
     value?: string | boolean;
@@ -22,12 +22,12 @@ export interface InputRadioProps {
     localePrefix?: string;
     t?: (string) => string;
     disabled?: boolean;
-}
+};
 
-interface defaultInputType {
+type defaultInputType = {
     name: string;
     disabled?: boolean;
-}
+};
 
 // TODO: Make a real boolean component
 

@@ -5,13 +5,12 @@
  * License text available at https://opensource.org/licenses/MIT
  */
 import React, { PropsWithChildren } from 'react';
-import { connect } from 'react-redux';
 import { Navigate, RouteProps } from 'react-router-dom';
 
 import { Header } from '../pageParts';
 import { CliUser } from 'chaire-lib-common/lib/services/user/userType';
 
-type PrivateRouteProps = RouteProps & {
+export type PrivateRouteProps = RouteProps & {
     isAuthenticated: boolean;
     component: any;
     componentProps: { [prop: string]: unknown };
@@ -21,27 +20,25 @@ type PrivateRouteProps = RouteProps & {
 } & PropsWithChildren;
 
 const PrivateRoute = ({ permissions, component: Component, children, ...rest }: PrivateRouteProps) => {
-    return rest.isAuthenticated ? (
-        permissions ? rest.user.isAuthorized(permissions) : true ? (
-            <React.Fragment>
+    return rest.isAuthenticated
+        ? permissions
+            ? rest.user.isAuthorized(permissions)
+                ? <React.Fragment>
+                    <Header
+                        path={rest.path as string}
+                        appName={rest.config?.appName as string}
+                    />
+                    <Component {...rest.componentProps} />
+                </React.Fragment>
+                : <Navigate to="/unauthorized" />
+            : <React.Fragment>
                 <Header
                     path={rest.path as string}
-                    user={rest.user}
                     appName={rest.config?.appName as string}
                 />
                 <Component {...rest.componentProps} />
             </React.Fragment>
-        ) : (
-            <Navigate to="/unauthorized" /*replace state={{ referrer: location }} */ />
-        )
-    ) : (
-        <Navigate to="/login" /*replace state={{ referrer: location }} */ />
-    );
+        : <Navigate to="/login" />;
 };
 
-/*const mapStateToProps = (state) => ({
-    user: state.auth.user,
-    isAuthenticated: !!state.auth.isAuthenticated
-});*/
-
-export default /*connect(mapStateToProps)*/PrivateRoute;
+export default PrivateRoute;

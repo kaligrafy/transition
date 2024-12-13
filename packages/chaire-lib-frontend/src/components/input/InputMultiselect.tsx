@@ -7,12 +7,12 @@
 import React from 'react';
 import Select from 'react-select';
 
-interface choiceType {
+type choiceType = {
     value: string;
     disabled?: boolean;
     label?: string;
     choices?: choiceType[];
-}
+};
 
 type innerChoiceType = choiceType & {
     index: number;

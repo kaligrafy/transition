@@ -37,78 +37,106 @@ const TransitionRouter: React.FunctionComponent<TransitionRouterProps> = (props:
     }));
 
     return (
-        <React.Fragment>
-            <Routes>
-                {/*<PrivateRoute
-                    path="/"
-                    component={DashboardTransition}
-                    componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
-                    config={props.config}
-                />
-                <PublicRoute path="/login" component={LoginPage} config={props.config} />
-                <PublicRoute path="/register" component={RegisterPage} config={props.config} />
-                <PublicRoute path="/forgot" component={ForgotPage} config={props.config} />
-                <PublicRoute path="/unconfirmed" component={UnconfirmedPage} config={props.config} />
+        <Routes>
+            <Route path="/register" element={
                 <PublicRoute
-                    path="/verify/:token"
+                    isAuthenticated={auth.isAuthenticated}
+                    component={RegisterPage}
+                    config={{ ...props.config, queryString: location.search }}
+                />
+            } />
+            <Route path="/forgot" element={
+                <PublicRoute
+                    isAuthenticated={auth.isAuthenticated}
+                    component={ForgotPage}
+                    config={{ ...props.config, queryString: location.search }}
+                />
+            } />
+            <Route path="/unconfirmed" element={
+                <PublicRoute
+                    isAuthenticated={auth.isAuthenticated}
+                    component={UnconfirmedPage}
+                    config={{ ...props.config, queryString: location.search }}
+                />
+            } />
+            <Route path="/verify/:token" element={
+                <PublicRoute
+                    isAuthenticated={auth.isAuthenticated}
                     component={VerifyPage}
-                    config={props.config}
-                    queryString={location.search}
+                    config={{ ...props.config, queryString: location.search }}
                 />
+            } />
+            <Route path="/reset/:token" element={
                 <PublicRoute
-                    path="/reset/:token"
+                    isAuthenticated={auth.isAuthenticated}
                     component={ResetPasswordPage}
-                    config={props.config}
-                    queryString={location.search}
+                    config={{ ...props.config, queryString: location.search }}
                 />
-                <PublicRoute path="/unauthorized" component={UnauthorizedPage} />*/
-                }
-                <Route path="/login" element={
-                    <PublicRoute
+            } />
+            <Route path="/unauthorized" element={
+                <PublicRoute
+                    isAuthenticated={auth.isAuthenticated}
+                    component={UnauthorizedPage}
+                    config={{ ...props.config, queryString: location.search }}
+                />
+            } />
+            <Route path="/login" element={
+                <PublicRoute
+                    isAuthenticated={auth.isAuthenticated}
+                    component={LoginPage}
+                    config={props.config}
+                />
+            } />
+            <Route
+                path="/"
+                element={
+                    <PrivateRoute
                         isAuthenticated={auth.isAuthenticated}
-                        component={LoginPage}
+                        user={auth.user}
+                        component={DashboardTransition}
+                        componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
                         config={props.config}
                     />
-                } />
-                <Route
-                    path="/"
-                    element={
-                        <PrivateRoute
-                            isAuthenticated={auth.isAuthenticated}
-                            user={auth.user}
-                            component={DashboardTransition}
-                            componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
-                            config={props.config}
-                        />
-                    }
-                />
-                <Route
-                    path="/dashboard"
-                    element={
-                        <PrivateRoute
-                            isAuthenticated={auth.isAuthenticated}
-                            user={auth.user}
-                            component={DashboardTransition}
-                            componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
-                            config={props.config}
-                        />
-                    }
-                />
-                <Route
-                    path="/home"
-                    element={
-                        <PrivateRoute
-                            isAuthenticated={auth.isAuthenticated}
-                            user={auth.user}
-                            component={DashboardTransition}
-                            componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
-                            config={props.config}
-                        />
-                    }
-                />
-                <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-        </React.Fragment>
+                }
+            />
+            <Route
+                path="/"
+                element={
+                    <PrivateRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        user={auth.user}
+                        component={DashboardTransition}
+                        componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
+                        config={props.config}
+                    />
+                }
+            />
+            <Route
+                path="/dashboard"
+                element={
+                    <PrivateRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        user={auth.user}
+                        component={DashboardTransition}
+                        componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
+                        config={props.config}
+                    />
+                }
+            />
+            <Route
+                path="/home"
+                element={
+                    <PrivateRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        user={auth.user}
+                        component={DashboardTransition}
+                        componentProps={{ contributions: props.contributions, mainMap: props.mainMap }}
+                        config={props.config}
+                    />
+                }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+        </Routes>
     );
 };
 

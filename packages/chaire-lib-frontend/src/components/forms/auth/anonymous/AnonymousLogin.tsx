@@ -1,34 +1,28 @@
-/*
- * Copyright 2022, Polytechnique Montreal and contributors
- *
- * This file is licensed under the MIT License.
- * License text available at https://opensource.org/licenses/MIT
- */
 import React from 'react';
-import { connect } from 'react-redux';
-
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
+import { RootState } from '../../../../store/configureStore';
 import { startAnonymousLogin } from '../../../../actions/Auth';
 
-export interface AnonymousLoginProps {
-    isAuthenticated?: boolean;
-    startAnonymousLogin: (callback?: () => void) => void;
+type AnonymousLoginProps = {
     login?: boolean;
-}
+};
 
-export const AnonymousLogin: React.FunctionComponent<AnonymousLoginProps> = (props: AnonymousLoginProps) => {
+const AnonymousLogin: React.FC<AnonymousLoginProps> = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, Action>>();
+
+    //const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    //const login = useSelector((state: RootState) => state.auth.login);
+
     React.useEffect(() => {
-        props.startAnonymousLogin();
-    }, []);
+        dispatch(startAnonymousLogin(location, navigate));
+    }, [dispatch, navigate]);
+
     return null;
 };
 
-const mapStateToProps = (state) => {
-    return { isAuthenticated: state.auth.isAuthenticated, login: state.auth.login };
-};
-
-const mapDispatchToProps = (dispatch, props: Omit<AnonymousLoginProps, 'startAnonymousLogin'>) => ({
-    startAnonymousLogin: (callback?: () => void) =>
-        dispatch(startAnonymousLogin(callback))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnonymousLogin);
+export default AnonymousLogin;

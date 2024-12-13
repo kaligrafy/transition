@@ -17,7 +17,7 @@ import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
 import { ObjectWithHistory } from 'chaire-lib-common/lib/utils/objects/ObjectWithHistory';
 import { Saveable, isSaveable } from 'chaire-lib-common/lib/utils/objects/Saveable';
 
-export interface SelectedObjectButtonsProps<T extends ObjectWithHistory<any>> extends WithTranslation {
+export type SelectedObjectButtonsProps<T extends ObjectWithHistory<any>> = WithTranslation & {
     object: T;
     /**
      * Function called when the save button is clicked. It replaces the default
@@ -62,7 +62,7 @@ export interface SelectedObjectButtonsProps<T extends ObjectWithHistory<any>> ex
 
     backAction?: React.MouseEventHandler;
     openBackConfirmModal?: React.MouseEventHandler;
-}
+};
 
 const SelectedObjectButtons: React.FunctionComponent<SelectedObjectButtonsProps<any>> = <
     T extends ObjectWithHistory<any>

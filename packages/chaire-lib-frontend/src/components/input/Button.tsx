@@ -8,8 +8,9 @@ import React, { MouseEvent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-export interface ButtonProps {
+export type ButtonProps = {
     onClick?: React.MouseEventHandler;
+    onKeyUp?: React.KeyboardEventHandler;
     href?: string;
     download?: string; // see: https://stackoverflow.com/questions/10049259/change-name-of-download-in-javascript
     label: string;
@@ -26,13 +27,13 @@ export interface ButtonProps {
     title?: string;
     name?: string;
     style?: { [key: string]: string };
-}
+};
 
-interface anchorAttributesProps {
+type anchorAttributesProps = {
     href: string;
     download?: string; // see: https://stackoverflow.com/questions/10049259/change-name-of-download-in-javascript
     className: string;
-}
+};
 
 export class Button extends React.Component<ButtonProps> {
     static defaultProps: Partial<ButtonProps> = {
@@ -103,6 +104,9 @@ export class Button extends React.Component<ButtonProps> {
             }
             if (this.props.name) {
                 attributes.name = this.props.name;
+            }
+            if (this.props.onKeyUp) {
+                attributes.onKeyUp = this.props.onKeyUp;
             }
             return (
                 <div className={this.props.align} style={this.props.style || {}}>

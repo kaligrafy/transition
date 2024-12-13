@@ -13,10 +13,10 @@ import {
     validateCaptcha as validateCaptchaMain
 } from 'react-simple-captcha';
 
-export interface CaptchaComponentProps {
+export type CaptchaComponentProps = {
     value?: string;
     onChange: React.ChangeEventHandler;
-}
+};
 
 export const validateCaptcha = (value?: string): boolean => {
     return validateCaptchaMain(value, true);

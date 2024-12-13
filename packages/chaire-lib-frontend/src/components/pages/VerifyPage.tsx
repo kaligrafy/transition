@@ -11,11 +11,11 @@ import { Link } from 'react-router-dom';
 
 import { startConfirmUser, ConfirmData, ConfirmCallbackType } from '../../actions/Auth';
 
-export interface VerifyPageProps extends WithTranslation {
+export type VerifyPageProps = WithTranslation & {
     isAuthenticated: boolean;
     startConfirmUser: (data: ConfirmData, callback?: ConfirmCallbackType) => void;
     token: string;
-}
+};
 
 type VerifyState = {
     status: 'Confirmed' | 'In Progress' | 'NotFound' | 'Error';

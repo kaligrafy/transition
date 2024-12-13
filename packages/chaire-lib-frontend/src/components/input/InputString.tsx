@@ -6,12 +6,12 @@
  */
 import React, { ChangeEvent, JSX } from 'react';
 
-export interface InputValue {
+export type InputValue = {
     value: any;
     valid: boolean;
-}
+};
 
-export interface InputStringProps {
+export type InputStringProps = {
     id: string;
     /**
      * @deprecated Use onValueUpdated instead. This method passes the value as
@@ -33,9 +33,9 @@ export interface InputStringProps {
     autocompleteChoices?: ({ label: string; value: string } | string)[];
     type?: 'text' | 'email' | 'number';
     pattern?: string;
-}
+};
 
-interface defaultInputType {
+type defaultInputType = {
     name: string;
     id: string;
     maxLength: number;
@@ -43,7 +43,7 @@ interface defaultInputType {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     disabled?: boolean;
     pattern?: string;
-}
+};
 
 const InputString: React.FunctionComponent<InputStringProps> = ({
     id,

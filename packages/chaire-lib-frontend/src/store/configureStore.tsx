@@ -20,9 +20,9 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const initialState = {};
 
-interface RootState {
+export type RootState = {
     auth: AuthState;
-}
+};
 
 export default (): Store => {
     const store = createStore(

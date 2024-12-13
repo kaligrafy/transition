@@ -10,32 +10,32 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
 import { _chunkify } from 'chaire-lib-common/lib/utils/LodashExtensions';
 
-interface choiceType {
+type choiceType = {
     value: string;
     iconPath?: string;
     label?: string;
     [key: string]: unknown;
-}
+};
 
-interface InputCheckboxCommonProps extends WithTranslation {
+type InputCheckboxCommonProps = WithTranslation & {
     id: string;
     localePrefix?: string;
     disabled?: boolean;
-}
+};
 
-export interface InputCheckboxProps extends InputCheckboxCommonProps {
+export type InputCheckboxProps = InputCheckboxCommonProps & {
     value?: string[];
     defaultValue?: string[];
     choices: choiceType[];
     columns?: number;
     onValueChange: (e: any) => void;
     allowSelectAll?: boolean;
-}
+};
 
-interface defaultInputType {
+type defaultInputType = {
     name: string;
     disabled?: boolean;
-}
+};
 
 class InputCheckboxInner extends React.Component<InputCheckboxProps> {
     static defaultProps: Partial<InputCheckboxProps> = {

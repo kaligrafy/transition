@@ -16,7 +16,7 @@ import en from 'date-fns/locale/en-CA';
  * there should be a dateFormat props if string and the onChange should
  * have as parameters the same type/format as the input. There could
  * also be a wrapper component for string dates */
-export interface InputCalendarProps {
+export type InputCalendarProps = {
     id: string;
     /** start and end are in ms since epoch */
     onChange: (start: number, end: number) => void;
@@ -25,7 +25,7 @@ export interface InputCalendarProps {
     dateFormat?: string;
     disabled?: boolean;
     language?: string;
-}
+};
 
 enum DateState {
     START,

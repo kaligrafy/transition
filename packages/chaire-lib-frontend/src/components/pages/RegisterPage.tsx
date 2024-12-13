@@ -7,11 +7,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import appConfiguration from '../../config/application.config';
 import RegisterForm from '../forms/auth/localLogin/RegisterForm';
 
-export interface RegisterPageProps extends WithTranslation {
+export type RegisterPageProps = WithTranslation & {
     isAuthenticated: boolean;
     config: {
         // @deprecated Use the value in auth instead
@@ -25,14 +25,14 @@ export interface RegisterPageProps extends WithTranslation {
             };
         };
     };
-}
+};
 
 export class RegisterPage extends React.Component<RegisterPageProps> {
     constructor(props: RegisterPageProps) {
         const navigate = useNavigate();
         super(props);
         if (this.props.isAuthenticated) {
-            navigate(appConfiguration.homePage);
+            redirect(appConfiguration.homePage);
         }
         this.state = {};
     }

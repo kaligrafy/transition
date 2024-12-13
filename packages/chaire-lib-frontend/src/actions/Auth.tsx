@@ -10,7 +10,7 @@ import { toCliUser } from '../services/auth/user';
 import { AuthAction, AuthActionTypes } from '../store/auth';
 import Preferences from 'chaire-lib-common/lib/config/Preferences';
 import serviceLocator from 'chaire-lib-common/lib/utils/ServiceLocator';
-import { Location, NavigateFunction } from 'react-router-dom';
+import { Location, NavigateFunction, redirect } from 'react-router-dom';
 
 // Required permissions to show user information in the header menu. For some basic user roles, like anonymous users, user information may not be wanted.
 let showUserInfoPerm:
@@ -48,13 +48,16 @@ export const logout = (): AuthAction => ({
 });
 
 export const redirectAfterLogin = (user: BaseUser, location: Location, navigate: NavigateFunction) => {
+    console.log('redirectAfterLogin', user, location, navigate);
     const requestedPath =
         location && location.state && (location.state as any).referrer ? (location.state as any).referrer : undefined;
-    return navigate(requestedPath ? requestedPath : user.homePage ? user.homePage : appConfiguration.homePage);
+    console.log('requestedPath', requestedPath || appConfiguration.homePage);
+    redirect(requestedPath ? requestedPath : user.homePage ? user.homePage : appConfiguration.homePage);
 };
 
 export type LoginData = { usernameOrEmail: string; password: string };
 export const startLogin = (data: LoginData, location: Location, navigate: NavigateFunction, callback?: () => void) => {
+    console.log('startLogin', data, location, navigate, callback);
     return async (dispatch) => {
         try {
             const response = await fetch('/login', {
@@ -67,19 +70,23 @@ export const startLogin = (data: LoginData, location: Location, navigate: Naviga
             });
             if (response.status === 200) {
                 const { user }: { user: BaseUser | undefined } = await response.json();
+                console.log('user', user);
                 if (user) {
+                    console.log('dispatching login');
                     dispatch(login(user, true, false, true));
                     if (typeof callback === 'function') {
+                        console.log('dispatching callback');
                         dispatch(callback());
                     }
-                    redirectAfterLogin(user);
+                    console.log('redirecting after login');
+                    redirectAfterLogin(user, location, navigate);
                 } else {
                     dispatch(login(null, false, false, true));
                 }
             } else if (response.status === 401) {
                 dispatch(login(null, false, false, true));
                 // Unconfirmed user, redirect to proper page
-                navigate('/unconfirmed');
+                redirect('/unconfirmed');
             } else {
                 // Any other response status should not authenticate but still give feedback to the user
                 dispatch(login(null, false, false, true));
@@ -91,8 +98,7 @@ export const startLogin = (data: LoginData, location: Location, navigate: Naviga
     };
 };
 
-export const startLogout = () => {
-    const navigate = useNavigate();
+export const startLogout = (navigate: NavigateFunction) => {
     return async (dispatch) => {
         try {
             const response = await fetch('/logout', { credentials: 'include' });
@@ -100,7 +106,7 @@ export const startLogout = () => {
                 const body = await response.json();
                 if (body.loggedOut === true) {
                     dispatch(logout());
-                    navigate('/login');
+                    redirect('/login');
                 }
             } else if (response.status === 401) {
                 //return { user: null };
@@ -113,8 +119,7 @@ export const startLogout = () => {
 };
 
 export type RegisterData = { username: string; email: string; generatedPassword: string | null; password: string };
-export const startRegisterWithPassword = (data: RegisterData, callback?: () => void) => {
-    const navigate = useNavigate();
+export const startRegisterWithPassword = (data: RegisterData, location: Location, navigate: NavigateFunction, callback?: () => void) => {
     return async (dispatch) => {
         try {
             const response = await fetch('/register', {
@@ -132,14 +137,14 @@ export const startRegisterWithPassword = (data: RegisterData, callback?: () => v
                     if (typeof callback === 'function') {
                         dispatch(callback());
                     }
-                    redirectAfterLogin(user);
+                    redirectAfterLogin(user, location, navigate);
                 } else {
                     dispatch(login(null, false, true, false));
                 }
             } else if (response.status === 401) {
                 // Unconfirmed user, redirect to proper page
                 dispatch(login(null, false, true, false));
-                navigate('/unconfirmed');
+                redirect('/unconfirmed');
             } else {
                 dispatch(login(null, false, true, false));
             }
@@ -228,11 +233,11 @@ export const startResetPassword = (data) => {
 export type LoginPwdlessData = { destination: string };
 export const startPwdLessLogin = (
     data: LoginPwdlessData,
+    location: Location,
+    navigate: NavigateFunction,
     callback?: () => void
 ) => {
     return async (dispatch) => {
-        const location = useLocation();
-        const navigate = useNavigate();
         try {
             const requestBody: LoginPwdlessData & { referrer?: string } = { ...data };
             if (location && location.state && (location.state as any).referrer) {
@@ -256,9 +261,9 @@ export const startPwdLessLogin = (
                         dispatch(callback());
                     }
                     // TODO this should be configurable
-                    redirectAfterLogin(user);
+                    redirectAfterLogin(user, location, navigate);
                 } else if (success === true) {
-                    navigate('/checkMagicEmail');
+                    redirect('/checkMagicEmail');
                 } else {
                     dispatch(login(null, false, false, true));
                 }
@@ -273,8 +278,7 @@ export const startPwdLessLogin = (
     };
 };
 
-export const startPwdLessVerify = (token: string, callback?: () => void) => {
-    const navigate = useNavigate();
+export const startPwdLessVerify = (token: string, location: Location, navigate: NavigateFunction, callback?: () => void) => {
     return async (dispatch) => {
         try {
             const response = await fetch(`/pwdless/verify?token=${token}`, {
@@ -289,9 +293,9 @@ export const startPwdLessVerify = (token: string, callback?: () => void) => {
                         dispatch(callback());
                     }
                     if (referrer) {
-                        navigate(referrer);
+                        redirect(referrer);
                     } else {
-                        redirectAfterLogin(user);
+                        redirectAfterLogin(user, location, navigate);
                     }
                 } else {
                     dispatch(login(null, false, false, true));
@@ -307,7 +311,7 @@ export const startPwdLessVerify = (token: string, callback?: () => void) => {
     };
 };
 
-export const startAnonymousLogin = (callback?: () => void) => {
+export const startAnonymousLogin = (location: Location, navigate: NavigateFunction, callback?: () => void) => {
     return async (dispatch) => {
         try {
             const response = await fetch('/anonymous', {
@@ -322,7 +326,7 @@ export const startAnonymousLogin = (callback?: () => void) => {
                     if (typeof callback === 'function') {
                         dispatch(callback());
                     }
-                    redirectAfterLogin(user);
+                    redirectAfterLogin(user, location, navigate);
                 } else {
                     dispatch(login(null, false, true, false));
                 }
@@ -338,8 +342,7 @@ export const startAnonymousLogin = (callback?: () => void) => {
     };
 };
 
-export const resetUserProfile = () => {
-    const navigate = useNavigate();
+export const resetUserProfile = (navigate: NavigateFunction) => {
     return async (dispatch) => {
         try {
             // reset user pref on server
@@ -351,7 +354,7 @@ export const resetUserProfile = () => {
 
             if (response.status === 200) {
                 const defaultPath = appConfiguration.homePage;
-                navigate(defaultPath);
+                redirect(defaultPath);
             }
         } catch (err) {
             console.log('Error reset user.', err);

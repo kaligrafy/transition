@@ -29,18 +29,18 @@ export type FileUploadStatus =
           status: 'aborted';
       };
 
-export interface FileUploaderHOCProps {
+export type FileUploaderHOCProps = {
     fileImportRef: React.RefObject<HTMLInputElement>;
     fileUploader: SocketIOFileClient;
     onChange: React.ChangeEventHandler;
     validator?: ImportValidator;
     uploadStatus: FileUploadStatus;
-}
+};
 
-interface FileUploaderHOCState {
+type FileUploaderHOCState = {
     validator?: ImportValidator;
     uploadStatus: FileUploadStatus;
-}
+};
 
 const fileUploaderHOC = <P,>(
     WrappedComponent: React.ComponentType<P>,

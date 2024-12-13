@@ -10,7 +10,7 @@ import { CirclePicker } from 'react-color';
 import { _isBlank } from 'chaire-lib-common/lib/utils/LodashExtensions';
 import Preferences from 'chaire-lib-common/lib/config/Preferences';
 
-export interface InputColorProps {
+export type InputColorProps = {
     id: string;
     onValueChange: (e: any) => void;
     /** Hex string representing the default color. For example: #123456 */
@@ -19,9 +19,9 @@ export interface InputColorProps {
     value?: string;
 }
 
-interface InputColorState {
+type InputColorState = {
     displayColorPicker: boolean;
-}
+};
 
 class InputColor extends React.Component<InputColorProps, InputColorState> {
     constructor(props: InputColorProps) {

@@ -29,13 +29,11 @@ const MagicLinkVerify: React.FC<MagicLinkVerifyProps> = ({ headerText }) => {
     }, [location.search]);
 
     React.useEffect(() => {
-        if (!token) {
-            console.log('No token specified');
-            redirect('/login');
-            return;
+        if (token) {
+            dispatch(startPwdLessVerify(token, location, navigate));
+        } else {
+            navigate('/login');
         }
-
-        dispatch(startPwdLessVerify(token, location, navigate));
     }, [token, dispatch, navigate]);
 
     if (!token) {

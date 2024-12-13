@@ -29,10 +29,10 @@ export type LoginPageProps = {
 export const LoginPage: React.FunctionComponent<LoginPageProps & WithTranslation> = (
     props: LoginPageProps & WithTranslation
 ) => {
-
+    const navigate = useNavigate();
     React.useEffect(() => {
         if (props.isAuthenticated) {
-            redirect(appConfiguration.homePage);
+            navigate(appConfiguration.homePage);
         }
     }, []);
 

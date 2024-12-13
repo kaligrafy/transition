@@ -6,18 +6,22 @@
  */
 import React from 'react';
 import { Link } from 'react-router';
-import { withTranslation, WithTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-interface MaintenancePageProps extends WithTranslation {
+type MaintenancePageProps = {
     linkPath?: string;
-}
+};
 
-export const MaintenancePage: React.FunctionComponent<MaintenancePageProps> = (props: MaintenancePageProps) => (
-    <div>
-        {props.t('auth:Maintenance')}
-        <br />
-        <Link to={props.linkPath ? props.linkPath : '/home'}>{props.t('auth:BackToHomePage')}</Link>
-    </div>
-);
+export const MaintenancePage: React.FunctionComponent<MaintenancePageProps> = (props: MaintenancePageProps) => {
+    const { t } = useTranslation('auth');
 
-export default withTranslation('auth')(MaintenancePage);
+    return (
+        <div>
+            {t('auth:Maintenance')}
+            <br />
+            <Link to={props.linkPath ? props.linkPath : '/home'}>{t('auth:BackToHomePage')}</Link>
+        </div>
+    );
+};
+
+export default MaintenancePage;

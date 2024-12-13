@@ -48,16 +48,13 @@ export const logout = (): AuthAction => ({
 });
 
 export const redirectAfterLogin = (user: BaseUser, location: Location, navigate: NavigateFunction) => {
-    console.log('redirectAfterLogin', user, location, navigate);
     const requestedPath =
         location && location.state && (location.state as any).referrer ? (location.state as any).referrer : undefined;
-    console.log('requestedPath', requestedPath || appConfiguration.homePage);
-    redirect(requestedPath ? requestedPath : user.homePage ? user.homePage : appConfiguration.homePage);
+    return navigate(requestedPath ? requestedPath : user.homePage ? user.homePage : appConfiguration.homePage);
 };
 
 export type LoginData = { usernameOrEmail: string; password: string };
 export const startLogin = (data: LoginData, location: Location, navigate: NavigateFunction, callback?: () => void) => {
-    console.log('startLogin', data, location, navigate, callback);
     return async (dispatch) => {
         try {
             const response = await fetch('/login', {
@@ -70,26 +67,22 @@ export const startLogin = (data: LoginData, location: Location, navigate: Naviga
             });
             if (response.status === 200) {
                 const { user }: { user: BaseUser | undefined } = await response.json();
-                console.log('user', user);
                 if (user) {
-                    console.log('dispatching login');
-                    dispatch(login(user, true, false, true));
+                    await dispatch(login(user, true, false, true));
                     if (typeof callback === 'function') {
-                        console.log('dispatching callback');
-                        dispatch(callback());
+                        await dispatch(callback());
                     }
-                    console.log('redirecting after login');
-                    redirectAfterLogin(user, location, navigate);
+                    return redirectAfterLogin(user, location, navigate);
                 } else {
-                    dispatch(login(null, false, false, true));
+                    await dispatch(login(null, false, false, true));
                 }
             } else if (response.status === 401) {
-                dispatch(login(null, false, false, true));
+                await dispatch(login(null, false, false, true));
                 // Unconfirmed user, redirect to proper page
-                redirect('/unconfirmed');
+                return redirect('/unconfirmed');
             } else {
                 // Any other response status should not authenticate but still give feedback to the user
-                dispatch(login(null, false, false, true));
+                await dispatch(login(null, false, false, true));
                 console.error('Error trying to log in: ', response);
             }
         } catch (err) {
@@ -105,8 +98,8 @@ export const startLogout = (navigate: NavigateFunction) => {
             if (response.status === 200) {
                 const body = await response.json();
                 if (body.loggedOut === true) {
-                    dispatch(logout());
-                    redirect('/login');
+                    await dispatch(logout());
+                    return redirect('/login');
                 }
             } else if (response.status === 401) {
                 //return { user: null };
@@ -133,20 +126,20 @@ export const startRegisterWithPassword = (data: RegisterData, location: Location
             if (response.status === 200) {
                 const { user }: { user: BaseUser | undefined } = await response.json();
                 if (user) {
-                    dispatch(login(user, true, true, false));
+                    await dispatch(login(user, true, true, false));
                     if (typeof callback === 'function') {
-                        dispatch(callback());
+                        await dispatch(callback());
                     }
-                    redirectAfterLogin(user, location, navigate);
+                    return redirectAfterLogin(user, location, navigate);
                 } else {
-                    dispatch(login(null, false, true, false));
+                    await dispatch(login(null, false, true, false));
                 }
             } else if (response.status === 401) {
                 // Unconfirmed user, redirect to proper page
-                dispatch(login(null, false, true, false));
-                redirect('/unconfirmed');
+                await dispatch(login(null, false, true, false));
+                return redirect('/unconfirmed');
             } else {
-                dispatch(login(null, false, true, false));
+                await dispatch(login(null, false, true, false));
             }
         } catch (error) {
             console.log('Error during registration.', error);
@@ -256,14 +249,14 @@ export const startPwdLessLogin = (
                 const { user, success }: { user?: BaseUser; success?: boolean } = json;
                 if (user) {
                     // Direct login after entering email or sms
-                    dispatch(login(user, true, true, false));
+                    await dispatch(login(user, true, true, false));
                     if (typeof callback === 'function') {
-                        dispatch(callback());
+                        await dispatch(callback());
                     }
                     // TODO this should be configurable
-                    redirectAfterLogin(user, location, navigate);
+                    return redirectAfterLogin(user, location, navigate);
                 } else if (success === true) {
-                    redirect('/checkMagicEmail');
+                    return redirect('/checkMagicEmail');
                 } else {
                     dispatch(login(null, false, false, true));
                 }
@@ -293,9 +286,9 @@ export const startPwdLessVerify = (token: string, location: Location, navigate: 
                         dispatch(callback());
                     }
                     if (referrer) {
-                        redirect(referrer);
+                        return redirect(referrer);
                     } else {
-                        redirectAfterLogin(user, location, navigate);
+                        return redirectAfterLogin(user, location, navigate);
                     }
                 } else {
                     dispatch(login(null, false, false, true));
@@ -322,11 +315,11 @@ export const startAnonymousLogin = (location: Location, navigate: NavigateFuncti
             if (response.status === 200) {
                 const { user }: { user: BaseUser | undefined } = await response.json();
                 if (user) {
-                    dispatch(login(user, true, true, false));
+                    await dispatch(login(user, true, true, false));
                     if (typeof callback === 'function') {
-                        dispatch(callback());
+                        await dispatch(callback());
                     }
-                    redirectAfterLogin(user, location, navigate);
+                    return redirectAfterLogin(user, location, navigate);
                 } else {
                     dispatch(login(null, false, true, false));
                 }
@@ -354,7 +347,7 @@ export const resetUserProfile = (navigate: NavigateFunction) => {
 
             if (response.status === 200) {
                 const defaultPath = appConfiguration.homePage;
-                redirect(defaultPath);
+                return redirect(defaultPath);
             }
         } catch (err) {
             console.log('Error reset user.', err);

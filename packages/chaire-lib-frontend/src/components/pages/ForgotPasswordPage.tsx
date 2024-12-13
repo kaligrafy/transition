@@ -18,7 +18,8 @@ type ForgotPasswordPageProps = {
     };
 };
 
-const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailRegex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ config }) => {
     const { t } = useTranslation('auth');
@@ -57,9 +58,11 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ config }) => {
         }
 
         setFormState((prev) => ({ ...prev, error: undefined }));
-        dispatch(startForgotPasswordRequest({
-            email: formState.email,
-        }));
+        dispatch(
+            startForgotPasswordRequest({
+                email: formState.email
+            })
+        );
     };
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
@@ -77,9 +80,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ config }) => {
     if (emailExists) {
         return (
             <div className="apptr__form apptr__form-auth apptr__form__label-standalone">
-                <p className="apptr__form__label-standalone">
-                    {t('auth:forgotPasswordEmailConfirmation')}
-                </p>
+                <p className="apptr__form__label-standalone">{t('auth:forgotPasswordEmailConfirmation')}</p>
                 <div className="apptr__footer-link-container">
                     <Link className="apptr__footer-link _oblique" to="/login">
                         {t('auth:BackToLoginPage')}
@@ -90,19 +91,13 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ config }) => {
     }
 
     return (
-        <form
-            className="apptr__form apptr__form-auth"
-            onKeyPress={handleKeyPress}
-            onSubmit={(e) => e.preventDefault()}
-        >
+        <form className="apptr__form apptr__form-auth" onKeyPress={handleKeyPress} onSubmit={(e) => e.preventDefault()}>
             <div className="apptr__form-label-container center">
                 <div className="apptr__form__label-standalone">
                     <p>{t('auth:pleaseEnterYourAccountEmail')}</p>
                 </div>
                 {formState.error && <FormErrors errors={[formState.error]} />}
-                {emailExists === false && !isAuthenticated && (
-                    <FormErrors errors={['auth:emailDoesNotExist']} />
-                )}
+                {emailExists === false && !isAuthenticated && <FormErrors errors={['auth:emailDoesNotExist']} />}
             </div>
 
             <div className="apptr__form-container question-empty">

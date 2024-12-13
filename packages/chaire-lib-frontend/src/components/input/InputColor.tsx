@@ -17,7 +17,7 @@ export type InputColorProps = {
     defaultColor: string;
     /** Hex string representing the color. For example: #123456 */
     value?: string;
-}
+};
 
 type InputColorState = {
     displayColorPicker: boolean;

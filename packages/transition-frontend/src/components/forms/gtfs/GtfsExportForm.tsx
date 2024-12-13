@@ -137,7 +137,7 @@ class GtfsExportForm extends ChangeEventsForm<WithTranslation, ChangeEventsState
                             label={this.props.t('transit:gtfs:PrepareGtfsFeed')}
                             onClick={this.onPrepare}
                         />
-                        {gtfsExporter.isPrepared() as boolean && (gtfsExporter.getData('zipFilePath') as string) && (
+                        {(gtfsExporter.isPrepared() as boolean) && (gtfsExporter.getData('zipFilePath') as string) && (
                             <Button
                                 type="href"
                                 icon={faFileDownload}

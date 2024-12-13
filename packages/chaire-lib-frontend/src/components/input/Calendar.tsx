@@ -82,18 +82,24 @@ export default class Calendar extends React.Component<InputCalendarProps, InputC
                 !this.state.endDate || this.state.endDate < startDate
                     ? new Date(date).setHours(23, 59, 0, 0)
                     : this.state.endDate;
-            this.setState({
-                startDate,
-                endDate,
-                dateState: DateState.END
-            }, () => this.props.onChange(startDate, endDate));
+            this.setState(
+                {
+                    startDate,
+                    endDate,
+                    dateState: DateState.END
+                },
+                () => this.props.onChange(startDate, endDate)
+            );
         } else {
             const endDate = new Date(date).setHours(23, 59, 0, 0);
 
-            this.setState({
-                endDate,
-                dateState: DateState.START
-            }, () => this.props.onChange(this.state.startDate, endDate));
+            this.setState(
+                {
+                    endDate,
+                    dateState: DateState.START
+                },
+                () => this.props.onChange(this.state.startDate, endDate)
+            );
         }
     }
 

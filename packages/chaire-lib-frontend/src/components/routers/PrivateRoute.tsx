@@ -20,25 +20,25 @@ export type PrivateRouteProps = RouteProps & {
 } & PropsWithChildren;
 
 const PrivateRoute = ({ permissions, component: Component, children, ...rest }: PrivateRouteProps) => {
-    return rest.isAuthenticated
-        ? permissions
-            ? rest.user.isAuthorized(permissions)
-                ? <React.Fragment>
-                    <Header
-                        path={rest.path as string}
-                        appName={rest.config?.appName as string}
-                    />
+    return rest.isAuthenticated ? (
+        permissions ? (
+            rest.user.isAuthorized(permissions) ? (
+                <React.Fragment>
+                    <Header path={rest.path as string} appName={rest.config?.appName as string} />
                     <Component {...rest.componentProps} />
                 </React.Fragment>
-                : <Navigate to="/unauthorized" />
-            : <React.Fragment>
-                <Header
-                    path={rest.path as string}
-                    appName={rest.config?.appName as string}
-                />
+            ) : (
+                <Navigate to="/unauthorized" />
+            )
+        ) : (
+            <React.Fragment>
+                <Header path={rest.path as string} appName={rest.config?.appName as string} />
                 <Component {...rest.componentProps} />
             </React.Fragment>
-        : <Navigate to="/login" />;
+        )
+    ) : (
+        <Navigate to="/login" />
+    );
 };
 
 export default PrivateRoute;

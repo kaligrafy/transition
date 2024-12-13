@@ -54,9 +54,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ headerText, buttonText }) => {
         }
 
         setFormState((prev) => ({ ...prev, error: undefined }));
-        dispatch(startPwdLessLogin({
-            destination: formState.email
-        }, location, navigate));
+        dispatch(
+            startPwdLessLogin(
+                {
+                    destination: formState.email
+                },
+                location,
+                navigate
+            )
+        );
     };
 
     const handleKeyUp = (e: React.KeyboardEvent) => {
@@ -72,9 +78,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ headerText, buttonText }) => {
                     <p>{headerText}</p>
                 </div>
                 {formState.error && <FormErrors errors={[formState.error]} />}
-                {login && !isAuthenticated && (
-                    <FormErrors errors={['auth:MagicLinkUseAnotherMethod']} />
-                )}
+                {login && !isAuthenticated && <FormErrors errors={['auth:MagicLinkUseAnotherMethod']} />}
             </div>
 
             <div className="apptr__form-container question-empty">

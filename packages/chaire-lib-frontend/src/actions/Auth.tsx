@@ -112,7 +112,12 @@ export const startLogout = (navigate: NavigateFunction) => {
 };
 
 export type RegisterData = { username: string; email: string; generatedPassword: string | null; password: string };
-export const startRegisterWithPassword = (data: RegisterData, location: Location, navigate: NavigateFunction, callback?: () => void) => {
+export const startRegisterWithPassword = (
+    data: RegisterData,
+    location: Location,
+    navigate: NavigateFunction,
+    callback?: () => void
+) => {
     return async (dispatch) => {
         try {
             const response = await fetch('/register', {
@@ -271,7 +276,12 @@ export const startPwdLessLogin = (
     };
 };
 
-export const startPwdLessVerify = (token: string, location: Location, navigate: NavigateFunction, callback?: () => void) => {
+export const startPwdLessVerify = (
+    token: string,
+    location: Location,
+    navigate: NavigateFunction,
+    callback?: () => void
+) => {
     return async (dispatch) => {
         try {
             const response = await fetch(`/pwdless/verify?token=${token}`, {

@@ -55,8 +55,7 @@ const ResetPasswordPage: React.FC = () => {
 
     React.useEffect(() => {
         const handleKeyPress = (e: KeyboardEvent) => {
-            if (e.which === 13 && e.target instanceof HTMLElement &&
-                e.target.tagName.toLowerCase() !== 'textarea') {
+            if (e.which === 13 && e.target instanceof HTMLElement && e.target.tagName.toLowerCase() !== 'textarea') {
                 e.preventDefault();
             }
         };
@@ -86,10 +85,12 @@ const ResetPasswordPage: React.FC = () => {
         }
 
         setFormState((prev) => ({ ...prev, error: undefined }));
-        dispatch(startResetPassword({
-            token,
-            password: formState.password
-        }));
+        dispatch(
+            startResetPassword({
+                token,
+                password: formState.password
+            })
+        );
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,10 +125,7 @@ const ResetPasswordPage: React.FC = () => {
     }
 
     return (
-        <form
-            className="apptr__form apptr__form-auth"
-            onSubmit={(e) => e.preventDefault()}
-        >
+        <form className="apptr__form apptr__form-auth" onSubmit={(e) => e.preventDefault()}>
             <div className="apptr__form-label-container center">
                 <div className="apptr__form__label-standalone">
                     <p>{t('auth:pleaseChooseANewPassword')}</p>
@@ -173,7 +171,7 @@ const ResetPasswordPage: React.FC = () => {
 
             <Button
                 {...buttonProps}
-                inputRef={submitButtonRef as React.RefObject<HTMLButtonElement> }
+                inputRef={submitButtonRef as React.RefObject<HTMLButtonElement>}
                 label={t('auth:Confirm')}
             />
         </form>

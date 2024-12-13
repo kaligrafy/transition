@@ -42,13 +42,9 @@ const MagicLinkVerify: React.FC<MagicLinkVerifyProps> = ({ headerText }) => {
 
     return (
         <div className="apptr__form apptr__form-auth apptr__form__label-standalone">
-            <p className="apptr__form__label-standalone">
-                {headerText || t('auth:VerifyingEmailToken')}
-            </p>
+            <p className="apptr__form__label-standalone">{headerText || t('auth:VerifyingEmailToken')}</p>
 
-            {login && !isAuthenticated && (
-                <FormErrors errors={['auth:MagicLinkVerificationFailed']} />
-            )}
+            {login && !isAuthenticated && <FormErrors errors={['auth:MagicLinkVerificationFailed']} />}
 
             <div className="apptr__footer-link-container">
                 <Link className="apptr__footer-link _oblique" to="/login">

@@ -95,16 +95,18 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         }
 
         setFormState((prev) => ({ ...prev, error: undefined }));
-        dispatch(startRegisterWithPassword(
-            {
-                username: withEmailOnly ? formState.email : formState.username,
-                email: formState.email,
-                generatedPassword: null,
-                password: formState.password
-            },
-            location,
-            navigate
-        ));
+        dispatch(
+            startRegisterWithPassword(
+                {
+                    username: withEmailOnly ? formState.email : formState.username,
+                    email: formState.email,
+                    generatedPassword: null,
+                    password: formState.password
+                },
+                location,
+                navigate
+            )
+        );
     };
 
     const handleKeyUp = (e: React.KeyboardEvent) => {
@@ -120,9 +122,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
                     <p>{introductionText || t('auth:pleaseEnterLoginCredentials')}</p>
                 </div>
                 {formState.error && <FormErrors errors={[formState.error]} />}
-                {register && !isAuthenticated && (
-                    <FormErrors errors={['auth:usernameOrEmailAlreadyExists']} />
-                )}
+                {register && !isAuthenticated && <FormErrors errors={['auth:usernameOrEmailAlreadyExists']} />}
             </div>
 
             <div className="apptr__form-container question-empty">
@@ -195,10 +195,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
             {withCaptcha && (
                 <div className="apptr__form-container question-empty">
-                    <CaptchaComponent
-                        value={formState.userCaptcha}
-                        onChange={(e) => handleInputChange(e)}
-                    />
+                    <CaptchaComponent value={formState.userCaptcha} onChange={(e) => handleInputChange(e)} />
                 </div>
             )}
 

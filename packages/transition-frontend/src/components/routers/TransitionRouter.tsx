@@ -26,7 +26,7 @@ type TransitionRouterProps = {
     contributions: DashboardContribution[];
     mainMap: React.ComponentType<MainMapProps>;
     config: any;
-}
+};
 
 const TransitionRouter: React.FunctionComponent<TransitionRouterProps> = (props: TransitionRouterProps) => {
     //const navigate = useNavigate();
@@ -38,55 +38,72 @@ const TransitionRouter: React.FunctionComponent<TransitionRouterProps> = (props:
 
     return (
         <Routes>
-            <Route path="/register" element={
-                <PublicRoute
-                    isAuthenticated={auth.isAuthenticated}
-                    component={RegisterPage}
-                    config={{ ...props.config, queryString: location.search }}
-                />
-            } />
-            <Route path="/forgot" element={
-                <PublicRoute
-                    isAuthenticated={auth.isAuthenticated}
-                    component={ForgotPage}
-                    config={{ ...props.config, queryString: location.search }}
-                />
-            } />
-            <Route path="/unconfirmed" element={
-                <PublicRoute
-                    isAuthenticated={auth.isAuthenticated}
-                    component={UnconfirmedPage}
-                    config={{ ...props.config, queryString: location.search }}
-                />
-            } />
-            <Route path="/verify/:token" element={
-                <PublicRoute
-                    isAuthenticated={auth.isAuthenticated}
-                    component={VerifyPage}
-                    config={{ ...props.config, queryString: location.search }}
-                />
-            } />
-            <Route path="/reset/:token" element={
-                <PublicRoute
-                    isAuthenticated={auth.isAuthenticated}
-                    component={ResetPasswordPage}
-                    config={{ ...props.config, queryString: location.search }}
-                />
-            } />
-            <Route path="/unauthorized" element={
-                <PublicRoute
-                    isAuthenticated={auth.isAuthenticated}
-                    component={UnauthorizedPage}
-                    config={{ ...props.config, queryString: location.search }}
-                />
-            } />
-            <Route path="/login" element={
-                <PublicRoute
-                    isAuthenticated={auth.isAuthenticated}
-                    component={LoginPage}
-                    config={props.config}
-                />
-            } />
+            <Route
+                path="/register"
+                element={
+                    <PublicRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        component={RegisterPage}
+                        config={{ ...props.config, queryString: location.search }}
+                    />
+                }
+            />
+            <Route
+                path="/forgot"
+                element={
+                    <PublicRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        component={ForgotPage}
+                        config={{ ...props.config, queryString: location.search }}
+                    />
+                }
+            />
+            <Route
+                path="/unconfirmed"
+                element={
+                    <PublicRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        component={UnconfirmedPage}
+                        config={{ ...props.config, queryString: location.search }}
+                    />
+                }
+            />
+            <Route
+                path="/verify/:token"
+                element={
+                    <PublicRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        component={VerifyPage}
+                        config={{ ...props.config, queryString: location.search }}
+                    />
+                }
+            />
+            <Route
+                path="/reset/:token"
+                element={
+                    <PublicRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        component={ResetPasswordPage}
+                        config={{ ...props.config, queryString: location.search }}
+                    />
+                }
+            />
+            <Route
+                path="/unauthorized"
+                element={
+                    <PublicRoute
+                        isAuthenticated={auth.isAuthenticated}
+                        component={UnauthorizedPage}
+                        config={{ ...props.config, queryString: location.search }}
+                    />
+                }
+            />
+            <Route
+                path="/login"
+                element={
+                    <PublicRoute isAuthenticated={auth.isAuthenticated} component={LoginPage} config={props.config} />
+                }
+            />
             <Route
                 path="/"
                 element={

@@ -102,7 +102,8 @@ class InputRadio extends React.Component<InputRadioProps> {
         }
 
         const radioChoices: JSX.Element[] = this.props.choices.map((choice) => {
-            const inputRadioRef: React.RefObject<HTMLInputElement> = React.createRef() as React.RefObject<HTMLInputElement>;
+            const inputRadioRef: React.RefObject<HTMLInputElement> =
+                React.createRef() as React.RefObject<HTMLInputElement>;
             const valueStr = choice.value.toString();
             const id = `${this.props.id}_${valueStr}`;
             return (

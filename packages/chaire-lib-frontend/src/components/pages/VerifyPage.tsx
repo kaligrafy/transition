@@ -52,14 +52,10 @@ const VerifyPage: React.FC = () => {
 
     return (
         <div className="apptr__form apptr__form-auth apptr__form__label-standalone">
-            <p className="apptr__form__label-standalone">
-                {t(getStatusMessage())}
-            </p>
+            <p className="apptr__form__label-standalone">{t(getStatusMessage())}</p>
             {status !== 'In Progress' && (
                 <p className="apptr__form__label-standalone">
-                    <Link to="/">
-                        {t('auth:BackToHomePage')}
-                    </Link>
+                    <Link to="/">{t('auth:BackToHomePage')}</Link>
                 </p>
             )}
         </div>

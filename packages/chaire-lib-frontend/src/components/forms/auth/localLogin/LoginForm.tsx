@@ -14,12 +14,9 @@ import { ThunkDispatch } from 'redux-thunk';
 type LoginPageProps = {
     withForgotPassword?: boolean;
     headerText?: string;
-}
+};
 
-const LoginPage: React.FC<LoginPageProps> = ({
-    withForgotPassword = false,
-    headerText
-}) => {
+const LoginPage: React.FC<LoginPageProps> = ({ withForgotPassword = false, headerText }) => {
     const { t } = useTranslation('auth');
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, Action>>();
     const location = useLocation();
@@ -61,10 +58,16 @@ const LoginPage: React.FC<LoginPageProps> = ({
         }
 
         setFormState((prev) => ({ ...prev, error: undefined }));
-        dispatch(startLogin({
-            usernameOrEmail: formState.usernameOrEmail,
-            password: formState.password
-        }, location as Location, navigate as NavigateFunction));
+        dispatch(
+            startLogin(
+                {
+                    usernameOrEmail: formState.usernameOrEmail,
+                    password: formState.password
+                },
+                location as Location,
+                navigate as NavigateFunction
+            )
+        );
     };
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
@@ -80,19 +83,13 @@ const LoginPage: React.FC<LoginPageProps> = ({
     };
 
     return (
-        <form
-            className="apptr__form apptr__form-auth"
-            onKeyUp={handleKeyPress}
-            onSubmit={(e) => e.preventDefault()}
-        >
+        <form className="apptr__form apptr__form-auth" onKeyUp={handleKeyPress} onSubmit={(e) => e.preventDefault()}>
             <div className="apptr__form-label-container center">
                 <div className="apptr__form__label-standalone no-question">
                     <p>{headerText || t('auth:pleaseEnterLoginCredentials')}</p>
                 </div>
                 {formState.error && <FormErrors errors={[formState.error]} />}
-                {login && !isAuthenticated && (
-                    <FormErrors errors={['auth:authenticationFailed']} />
-                )}
+                {login && !isAuthenticated && <FormErrors errors={['auth:authenticationFailed']} />}
             </div>
 
             <div className="apptr__form-container question-empty">

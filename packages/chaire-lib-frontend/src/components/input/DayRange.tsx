@@ -17,7 +17,7 @@ export type DayRangeProps = WithTranslation & {
     days: number[];
     disabled?: boolean;
     showPeriodDropdown?: boolean;
-}
+};
 
 type dayRangeType = 'custom' | 'week' | 'week-end' | 'all';
 

@@ -72,7 +72,7 @@ type UserMenuProps = {
     user: CliUser;
     wrapperRef: React.RefObject<HTMLDivElement>;
     closeMenu: () => void;
-}
+};
 
 const UserMenu: React.FC<UserMenuProps> = ({ wrapperRef, closeMenu }) => {
     const [hasModalOpened, setHasModalOpened] = React.useState(false);
@@ -112,11 +112,7 @@ const User: React.FC<UserProps> = ({ user }) => {
             <button
                 className="menu-button"
                 type="button"
-                onClick={
-                    appConfiguration.userMenuItems.length > 0
-                        ? () => setDisplay(!display)
-                        : undefined
-                }
+                onClick={appConfiguration.userMenuItems.length > 0 ? () => setDisplay(!display) : undefined}
             >
                 {user.username || user.email || t('menu:User')}
             </button>
@@ -175,16 +171,12 @@ const Header: React.FC<HeaderProps> = ({ path }) => {
                         )}
                         {user && config.showLogout !== false && (
                             <li className="tr__top-menu-element">
-                                <button
-                                    type="button"
-                                    className="menu-button"
-                                    onClick={handleLogout}
-                                >
+                                <button type="button" className="menu-button" onClick={handleLogout}>
                                     {t('menu:logout')}
                                 </button>
                             </li>
                         )}
-                        {config.languages.map((language) => (
+                        {config.languages.map((language) =>
                             i18n.language !== language ? (
                                 <li className="tr__top-menu-element" key={`lang-${language}`}>
                                     <button
@@ -200,7 +192,7 @@ const Header: React.FC<HeaderProps> = ({ path }) => {
                                     </button>
                                 </li>
                             ) : null
-                        ))}
+                        )}
                         {user && <User user={user} />}
                     </ul>
                 </nav>

@@ -27,16 +27,16 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ config }) => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
     // Check if registration is allowed based on config
-    const allowRegistration = React.useMemo(() =>
-        config.allowRegistration !== false &&
-        config.auth?.localLogin?.allowRegistration !== false
-    , [config]);
+    const allowRegistration = React.useMemo(
+        () => config.allowRegistration !== false && config.auth?.localLogin?.allowRegistration !== false,
+        [config]
+    );
 
     // Handle email-only registration configuration
-    const withEmailOnly = React.useMemo(() =>
-        config.registerWithEmailOnly ||
-        config.auth?.localLogin?.registerWithEmailOnly
-    , [config]);
+    const withEmailOnly = React.useMemo(
+        () => config.registerWithEmailOnly || config.auth?.localLogin?.registerWithEmailOnly,
+        [config]
+    );
 
     // Redirect if authenticated
     if (isAuthenticated) {
@@ -50,10 +50,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ config }) => {
 
     return (
         <>
-            <RegisterForm
-                withCaptcha={true}
-                withEmailOnly={withEmailOnly}
-            />
+            <RegisterForm withCaptcha={true} withEmailOnly={withEmailOnly} />
             <div className="apptr__separator-medium" />
             <div className="apptr__footer-link-container">
                 <Link className="apptr__footer-link" to="/login">

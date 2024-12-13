@@ -14,7 +14,13 @@ export const initialState: AuthState = {
 };
 
 type AuthAction =
-    | { type: AuthActionTypes.LOGIN; user: CliUser | null; isAuthenticated: boolean; register?: boolean; login?: boolean }
+    | {
+          type: AuthActionTypes.LOGIN;
+          user: CliUser | null;
+          isAuthenticated: boolean;
+          register?: boolean;
+          login?: boolean;
+      }
     | { type: AuthActionTypes.LOGOUT; user: null; isAuthenticated: false; register?: boolean }
     | { type: AuthActionTypes.FORGOT; forgot: boolean; emailExists: boolean; message: string }
     | { type: AuthActionTypes.RESET; status: string };

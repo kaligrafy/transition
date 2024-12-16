@@ -9,7 +9,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import ButtonCell from '../ButtonCell';
-import { create } from 'node:domain';
 
 // Mock react-markdown and remark-gfm as they use syntax not supported by jest
 jest.mock('react-markdown', () => 'Markdown');

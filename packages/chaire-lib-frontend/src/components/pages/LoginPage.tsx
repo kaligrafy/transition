@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import appConfiguration from '../../config/application.config';
 import LoginForm from '../forms/auth/localLogin/LoginForm';
-import { redirect, useNavigate } from 'react-router';
+import { redirect, useNavigate, NavigateFunction } from 'react-router';
 
 export type LoginPageProps = {
     isAuthenticated?: boolean;
@@ -29,7 +29,7 @@ export type LoginPageProps = {
 export const LoginPage: React.FunctionComponent<LoginPageProps & WithTranslation> = (
     props: LoginPageProps & WithTranslation
 ) => {
-    const navigate = useNavigate();
+    const navigate : NavigateFunction = useNavigate();
     React.useEffect(() => {
         if (props.isAuthenticated) {
             navigate(appConfiguration.homePage);

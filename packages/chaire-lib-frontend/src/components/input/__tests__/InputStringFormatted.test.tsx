@@ -61,7 +61,7 @@ test('Disabled', () => {
 });
 
 test('Text input change with deprecated onValueChange', () => {
-    const stringFormattedInput = mount(<InputStringFormatted
+    const { container } = render(<InputStringFormatted
         id = {testId}
         onValueChange = {mockOnChange}
         value = {originalIntValue}
@@ -71,31 +71,28 @@ test('Text input change with deprecated onValueChange', () => {
         key = {testId}
     />);
     // Validate initial values
-    const inputElement = stringFormattedInput.find({ id: `${testId}`, type: 'text' });
-    expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe(originalIntValue.toString());
+    const inputElement = container.querySelector(`#${testId}`) as HTMLInputElement;
+    expect(inputElement.value).toBe(originalIntValue.toString());
 
     // Change the value manually to a valid value
-    inputElement.getDOMNode<HTMLInputElement>().value = (originalIntValue + 1).toString();
-    inputElement.simulate('change');
+    fireEvent.change(inputElement, { target: { value: (originalIntValue + 1).toString() } });
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith(originalIntValue + 1);
-    expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe((originalIntValue + 1).toString());
+    expect(inputElement.value).toBe((originalIntValue + 1).toString());
 
     // Manually change the value to something that doesn't pass the string validation
-    inputElement.getDOMNode<HTMLInputElement>().value = (originalIntValue + 1).toString() + 'a';
-    inputElement.simulate('change');
+    fireEvent.change(inputElement, { target: { value: (originalIntValue + 1).toString() + 'a' } });
     expect(mockOnChange).toHaveBeenCalledTimes(1);
-    expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe((originalIntValue + 1).toString() + 'a');
+    expect(inputElement.value).toBe((originalIntValue + 1).toString() + 'a');
 
     // Set the value to empty string
-    inputElement.getDOMNode<HTMLInputElement>().value = '';
-    inputElement.simulate('change');
+    fireEvent.change(inputElement, { target: { value: '' } });
     expect(mockOnChange).toHaveBeenCalledTimes(2);
     expect(mockOnChange).toHaveBeenCalledWith(null);
 });
 
 test('Text input change', () => {
-    const stringFormattedInput = mount(<InputStringFormatted
+    const { container } = render(<InputStringFormatted
         id = {testId}
         onValueUpdated = {mockOnChange}
         value = {originalIntValue}
@@ -105,26 +102,23 @@ test('Text input change', () => {
         key = {testId}
     />);
     // Validate initial values
-    const inputElement = stringFormattedInput.find({ id: `${testId}`, type: 'text' });
-    expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe(originalIntValue.toString());
+    const inputElement = container.querySelector(`#${testId}`) as HTMLInputElement;
+    expect(inputElement.value).toBe(originalIntValue.toString());
 
     // Change the value manually to a valid value
-    inputElement.getDOMNode<HTMLInputElement>().value = (originalIntValue + 1).toString();
-    inputElement.simulate('change');
+    fireEvent.change(inputElement, { target: { value: (originalIntValue + 1).toString() } });
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenCalledWith({ value: originalIntValue + 1, valid: true });
-    expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe((originalIntValue + 1).toString());
+    expect(inputElement.value).toBe((originalIntValue + 1).toString());
 
     // Manually change the value to something that doesn't pass the string validation
-    inputElement.getDOMNode<HTMLInputElement>().value = (originalIntValue + 1).toString() + 'a';
-    inputElement.simulate('change');
+    fireEvent.change(inputElement, { target: { value: (originalIntValue + 1).toString() + 'a' } });
     expect(mockOnChange).toHaveBeenCalledTimes(2);
     expect(mockOnChange).toHaveBeenLastCalledWith({ value: null, valid: false });
-    expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe((originalIntValue + 1).toString() + 'a');
+    expect(inputElement.value).toBe((originalIntValue + 1).toString() + 'a');
 
     // Set the value to empty string
-    inputElement.getDOMNode<HTMLInputElement>().value = '';
-    inputElement.simulate('change');
+    fireEvent.change(inputElement, { target: { value: '' } });
     expect(mockOnChange).toHaveBeenCalledTimes(3);
     expect(mockOnChange).toHaveBeenLastCalledWith({ value: null, valid: true });
 });

@@ -107,7 +107,7 @@ test('Call onValueUpdated', () => {
 
 test('type check validity', () => {
     const originalIntValue = '5';
-    const stringInput = mount(<InputString
+    const { container } = render(<InputString
         id = {testId}
         onValueUpdated = {mockOnChange}
         type = 'number'
@@ -115,10 +115,10 @@ test('type check validity', () => {
     />);
 
     // Validate initial values
-    const inputElements = stringInput.find({ id: `${testId}`, type: 'number' });
-    expect(inputElements).toBeTruthy();
-    const inputElement = inputElements.last();
-    expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe(originalIntValue);
+    const inputElement = container.querySelector(`#${testId}`) as HTMLInputElement;
+    expect(inputElement).toBeTruthy();
+    expect(inputElement.type).toBe('number');
+    expect(inputElement.value).toBe(originalIntValue);
 
     /* FIXME tahini: some tests fail here and behave differently than browser. Why?
     // Change the value manually to an invalid value
@@ -132,8 +132,7 @@ test('type check validity', () => {
 
     // Go back to valid value
     const newIntValue = '10';
-    inputElement.getDOMNode<HTMLInputElement>().value = newIntValue;
-    inputElement.simulate('change');
+    fireEvent.change(inputElement, { target: { value: newIntValue } });
     expect(mockOnChange).toHaveBeenCalledTimes(1);
     expect(mockOnChange).toHaveBeenLastCalledWith({ value: newIntValue, valid: true });
     //expect(inputElement.getDOMNode<HTMLInputElement>().value).toBe(newIntValue);

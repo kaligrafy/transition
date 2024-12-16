@@ -1,8 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, Link } from 'react-router';
-import type { Location, NavigateFunction } from 'react-router';
+import { useLocation, useNavigate, Link, NavigateFunction, Location } from 'react-router';
 
 import FormErrors from '../../../pageParts/FormErrors';
 import { startLogin } from '../../../../actions/Auth';

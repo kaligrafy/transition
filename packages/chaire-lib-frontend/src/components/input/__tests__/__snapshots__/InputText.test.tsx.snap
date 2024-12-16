@@ -1,58 +1,327 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`All props 1`] = `
-<textarea
-  autoComplete="none"
-  className="tr__form-input-textarea apptr__input _input-textarea"
-  disabled={false}
-  id="textAreaWidgetId"
-  maxLength={100}
-  name="textAreaWidgetId"
-  onChange={[MockFunction]}
-  placeholder="placeholder"
-  rows={10}
-  value="test"
-/>
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <textarea
+        autocomplete="none"
+        class="tr__form-input-textarea apptr__input _input-textarea"
+        id="textAreaWidgetId"
+        maxlength="100"
+        name="textAreaWidgetId"
+        placeholder="placeholder"
+        rows="10"
+      >
+        test
+      </textarea>
+    </div>
+  </body>,
+  "container": <div>
+    <textarea
+      autocomplete="none"
+      class="tr__form-input-textarea apptr__input _input-textarea"
+      id="textAreaWidgetId"
+      maxlength="100"
+      name="textAreaWidgetId"
+      placeholder="placeholder"
+      rows="10"
+    >
+      test
+    </textarea>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
 `;
 
 exports[`Default props 1`] = `
-<textarea
-  autoComplete="none"
-  className="tr__form-input-textarea apptr__input _input-textarea"
-  disabled={false}
-  id="textAreaWidgetId"
-  maxLength={2000}
-  name="textAreaWidgetId"
-  rows={5}
-  value=""
-/>
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <textarea
+        autocomplete="none"
+        class="tr__form-input-textarea apptr__input _input-textarea"
+        id="textAreaWidgetId"
+        maxlength="2000"
+        name="textAreaWidgetId"
+        rows="5"
+      />
+    </div>
+  </body>,
+  "container": <div>
+    <textarea
+      autocomplete="none"
+      class="tr__form-input-textarea apptr__input _input-textarea"
+      id="textAreaWidgetId"
+      maxlength="2000"
+      name="textAreaWidgetId"
+      rows="5"
+    />
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
 `;
 
 exports[`Disabled 1`] = `
-<textarea
-  autoComplete="none"
-  className="tr__form-input-textarea apptr__input _input-textarea"
-  disabled={true}
-  id="textAreaWidgetId"
-  maxLength={2000}
-  name="textAreaWidgetId"
-  onChange={[MockFunction]}
-  rows={5}
-  value=""
-/>
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <textarea
+        autocomplete="none"
+        class="tr__form-input-textarea apptr__input _input-textarea"
+        disabled=""
+        id="textAreaWidgetId"
+        maxlength="2000"
+        name="textAreaWidgetId"
+        rows="5"
+      />
+    </div>
+  </body>,
+  "container": <div>
+    <textarea
+      autocomplete="none"
+      class="tr__form-input-textarea apptr__input _input-textarea"
+      disabled=""
+      id="textAreaWidgetId"
+      maxlength="2000"
+      name="textAreaWidgetId"
+      rows="5"
+    />
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
 `;
 
 exports[`Placeholder 1`] = `
-<textarea
-  autoComplete="none"
-  className="tr__form-input-textarea apptr__input _input-textarea"
-  disabled={false}
-  id="textAreaWidgetId"
-  maxLength={100}
-  name="textAreaWidgetId"
-  onChange={[MockFunction]}
-  placeholder="placeholder"
-  rows={10}
-  value=""
-/>
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <textarea
+        autocomplete="none"
+        class="tr__form-input-textarea apptr__input _input-textarea"
+        id="textAreaWidgetId"
+        maxlength="100"
+        name="textAreaWidgetId"
+        placeholder="placeholder"
+        rows="10"
+      />
+    </div>
+  </body>,
+  "container": <div>
+    <textarea
+      autocomplete="none"
+      class="tr__form-input-textarea apptr__input _input-textarea"
+      id="textAreaWidgetId"
+      maxlength="100"
+      name="textAreaWidgetId"
+      placeholder="placeholder"
+      rows="10"
+    />
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
 `;

@@ -23,7 +23,7 @@ test('Default props', () => {
 });
 
 test('All props', () => {
-    const ref: React.RefObject<HTMLInputElement> = React.createRef();
+    const ref: React.RefObject<HTMLInputElement> = React.createRef() as React.RefObject<HTMLInputElement>;
     const input = render(<InputFile
         id = {testId}
         onChange = {mockOnChange}
@@ -35,7 +35,7 @@ test('All props', () => {
 });
 
 test('Disabled', () => {
-    const ref: React.RefObject<HTMLInputElement> = React.createRef();
+    const ref: React.RefObject<HTMLInputElement> = React.createRef() as React.RefObject<HTMLInputElement>;
     const input = render(<InputFile
         id = {testId}
         onChange = {mockOnChange}

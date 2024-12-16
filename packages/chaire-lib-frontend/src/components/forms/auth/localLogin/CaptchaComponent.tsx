@@ -4,13 +4,14 @@
  * This file is licensed under the MIT License.
  * License text available at https://opensource.org/licenses/MIT
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 // FIXME Using the NoReload captcha (which can pose problems to users) because the "Reload Captcha" text is hardcoded in english. Switch when https://github.com/masroorejaz/react-simple-captcha/pull/2 is accepted
 import {
     loadCaptchaEnginge,
+    LoadCanvasTemplate,
     LoadCanvasTemplateNoReload,
-    validateCaptcha as validateCaptchaMain
+    validateCaptcha as validateCaptchaMain,
 } from 'react-simple-captcha';
 
 export type CaptchaComponentProps = {
@@ -25,7 +26,7 @@ export const validateCaptcha = (value?: string): boolean => {
 export const CaptchaComponent: React.FunctionComponent<CaptchaComponentProps & WithTranslation> = (
     props: CaptchaComponentProps & WithTranslation
 ) => {
-    React.useEffect(() => {
+    useEffect(() => {
         loadCaptchaEnginge(6);
     }, []);
 

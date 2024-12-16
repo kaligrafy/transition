@@ -6,10 +6,10 @@
  */
 import React from 'react';
 import { BrowserRouter } from 'react-router';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import NotFoundPage from '../NotFoundPage';
 
 test('Should correctly render NotFound page', () =>{
-    const wrapper = mount(<BrowserRouter><NotFoundPage /></BrowserRouter>);
-    expect(wrapper).toMatchSnapshot();
+    const { container } = render(<BrowserRouter><NotFoundPage /></BrowserRouter>);
+    expect(container).toMatchSnapshot();
 });

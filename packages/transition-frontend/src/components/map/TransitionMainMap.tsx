@@ -207,6 +207,8 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
         this.mapCallbacks = {
             pickMultipleObjects: this.pickMultipleObjects
         };
+
+        serviceLocator.eventManager.on('selected.deselect.measureTool', this.disableMeasureTool);
     }
 
     enableMeasureTool = () => {
@@ -519,9 +521,7 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
 
     // FIXME: Find the type for this
     onViewStateChange = (viewStateChange) => {
-        if (!this.state.measureToolEnabled) {
-            this.setState({ viewState: viewStateChange.viewState });
-        }
+        this.setState({ viewState: viewStateChange.viewState });
         this.updateUserPrefs(viewStateChange);
     };
 
@@ -667,7 +667,18 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
                             <MapButton
                                 title="main:MeasureTool"
                                 className={`${this.state.measureToolEnabled ? 'active' : ''}`}
-                                onClick={() => this.enableMeasureTool()}
+                                onClick={() => {
+                                    if (serviceLocator.selectedObjectsManager.isSelected('measureTool')) {
+                                        serviceLocator.selectedObjectsManager.deselect('measureTool');
+                                        serviceLocator.eventManager.emit('map.updateLayers', {
+                                            measureToolPoint: turfFeatureCollection([]),
+                                            measureToolLine: turfFeatureCollection([]),
+                                            measureToolText: turfFeatureCollection([])
+                                        });
+                                    } else {
+                                        this.enableMeasureTool();
+                                    }
+                                }}
                                 iconPath={'/dist/images/icons/interface/ruler_white.svg'}
                             />
                         )}

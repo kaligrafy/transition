@@ -13,7 +13,7 @@ import { LineLayerProps, TextLayerProps, ScatterplotLayerProps } from '@deck.gl/
 type CustomLayerProps = LineLayerProps | TextLayerProps | ScatterplotLayerProps;
 
 // deck.gl layers config:
-const layersConfig: { [layerShortname: string]: { type: string, config: CustomLayerProps } } = {
+const layersConfig: { [layerShortname: string]: { type: string; config: CustomLayerProps } } = {
     measureToolLine: {
         type: 'line',
         config: {
@@ -23,7 +23,7 @@ const layersConfig: { [layerShortname: string]: { type: string, config: CustomLa
             getWidth: 1,
             widthUnits: 'pixels',
             widthMinPixels: 3,
-            widthMaxPixels: 3,
+            widthMaxPixels: 3
         }
     },
     measureToolPoint: {
@@ -34,7 +34,7 @@ const layersConfig: { [layerShortname: string]: { type: string, config: CustomLa
             radiusUnits: 'pixels',
             getPosition: [0, 0],
             getRadius: 4,
-            getFillColor: [0, 0, 0, 255],
+            getFillColor: [0, 0, 0, 255]
         }
     },
     measureToolText: {
@@ -44,7 +44,7 @@ const layersConfig: { [layerShortname: string]: { type: string, config: CustomLa
             data: [],
             getSize: 12,
             background: true,
-            backgroundPadding: [2, 2],
+            backgroundPadding: [2, 2]
         }
     }
 };

@@ -33,7 +33,6 @@ const onMapClicked = (pointInfo: PointInfo, e: MjolnirEvent) => {
             measureToolPoint: pointsGeojson,
             measureToolText: labelsGeojson
         });
-
     }
 };
 

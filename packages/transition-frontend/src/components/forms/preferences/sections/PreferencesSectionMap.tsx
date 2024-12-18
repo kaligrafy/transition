@@ -6,7 +6,7 @@
  */
 import React from 'react';
 import Collapsible from 'react-collapsible';
-import { withTranslation } from 'react-i18next';
+import { useTranslation, withTranslation } from 'react-i18next';
 import _toString from 'lodash/toString';
 import PreferencesResetToDefaultButton from '../PreferencesResetToDefaultButton';
 import { roundToDecimals } from 'chaire-lib-common/lib/utils/MathUtils';
@@ -18,6 +18,7 @@ import { InputCheckboxBoolean } from 'chaire-lib-frontend/lib/components/input/I
 
 const PreferencesSectionMap: React.FunctionComponent<PreferencesSectionProps> = (props: PreferencesSectionProps) => {
     const prefs = props.preferences.getAttributes();
+    const { t } = useTranslation();
 
     const sections = prefs.sections.transition;
     const sectionsChoices: { value: string; label: string }[] = [];
@@ -25,7 +26,7 @@ const PreferencesSectionMap: React.FunctionComponent<PreferencesSectionProps> = 
         const section = sections[sectionShortname];
         if (section.enabled !== false) {
             sectionsChoices.push({
-                label: props.t(section.localizedTitle),
+                label: t(section.localizedTitle),
                 value: sectionShortname
             });
         }
@@ -40,23 +41,20 @@ const PreferencesSectionMap: React.FunctionComponent<PreferencesSectionProps> = 
     const mapStyleChoices: { value: string; label: string }[] = [];
     Object.keys(mapStyles).forEach((key) => {
         mapStyleChoices.push({
-            label: props.t(`main:preferences:mapStyles:${key}`),
+            label: t(`main:preferences:mapStyles:${key}`),
             value: mapStyles[key]
         });
     });
 
     return (
-        <Collapsible trigger={props.t('main:preferences:Map')} open={true} transitionTime={100}>
+        <Collapsible trigger={t('main:preferences:Map')} open={true} transitionTime={100}>
             <div className="tr__form-section">
-                <InputWrapper
-                    label={props.t('main:preferences:MapStyle')}
-                    help={props.t('main:preferences:MapStyleHelp')}
-                >
+                <InputWrapper label={t('main:preferences:MapStyle')} help={t('main:preferences:MapStyleHelp')}>
                     <InputSelect
                         id={'formFieldPreferencesMapStyleURL'}
                         value={prefs.mapStyleURL}
                         choices={mapStyleChoices}
-                        t={props.t}
+                        t={t}
                         onValueChange={(e) => props.onValueChange('mapStyleURL', { value: e.target.value })}
                     />
                     <PreferencesResetToDefaultButton
@@ -66,8 +64,8 @@ const PreferencesSectionMap: React.FunctionComponent<PreferencesSectionProps> = 
                     />
                 </InputWrapper>
                 <InputWrapper
-                    label={props.t('main:preferences:RasterTileLayerOpacity')}
-                    help={props.t('main:preferences:RasterTileLayerOpacityHelp')}
+                    label={t('main:preferences:RasterTileLayerOpacity')}
+                    help={t('main:preferences:RasterTileLayerOpacityHelp')}
                 >
                     <InputStringFormatted
                         key={`formFieldPreferencesMapTileLayerOpacity${props.resetChangesCount}`}
@@ -86,12 +84,12 @@ const PreferencesSectionMap: React.FunctionComponent<PreferencesSectionProps> = 
                         preferences={props.preferences}
                     />
                 </InputWrapper>
-                <InputWrapper twoColumns={true} label={props.t('main:preferences:EnableMapAnimations')}>
+                <InputWrapper twoColumns={true} label={t('main:preferences:EnableMapAnimations')}>
                     <InputCheckboxBoolean
                         id={'formFieldPreferencesGeneralEnableMapAnimation'}
                         isChecked={props.preferences.get('map.enableMapAnimations')}
                         defaultChecked={true}
-                        label={props.t('main:Yes')}
+                        label={t('main:Yes')}
                         onValueChange={(e) => props.onValueChange('map.enableMapAnimations', { value: e.target.value })}
                     />
                     <PreferencesResetToDefaultButton

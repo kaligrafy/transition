@@ -4,12 +4,13 @@
  * This file is licensed under the MIT License.
  * License text available at https://opensource.org/licenses/MIT
  */
-import React, { PropsWithChildren } from 'react';
+import React, { createRef, PropsWithChildren } from 'react';
 import { createRoot } from 'react-dom/client';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import ReactDom from 'react-dom';
 import _cloneDeep from 'lodash/cloneDeep';
 import _debounce from 'lodash/debounce';
+import { MjolnirGestureEvent } from 'mjolnir.js';
 
 // deck.gl and maps
 import DeckGL from '@deck.gl/react';
@@ -318,7 +319,7 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
         //serviceLocator.eventManager.off('map.deleteSelectedNodes', this.deleteSelectedNodes);
     };
 
-    private executeEvent = (event: MapEventHandlerDescriptor, pointInfo: PointInfo, e: MjolnirEvent) => {
+    private executeEvent = (event: MapEventHandlerDescriptor, pointInfo: PointInfo, e: MjolnirGestureEvent) => {
         if (event.condition === undefined || event.condition(this.props.activeSection)) {
             event.handler(pointInfo, e, this.mapCallbacks);
         }
@@ -337,7 +338,7 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
     private executeMapSelectEvent = (
         event: MapSelectEventHandlerDescriptor,
         pickInfo: PickingInfo[],
-        e: MjolnirEvent
+        e: MjolnirGestureEvent
     ) => {
         if (event.condition === undefined || event.condition(this.props.activeSection)) {
             return event.handler(pickInfo, e, this.mapCallbacks);

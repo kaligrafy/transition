@@ -60,7 +60,12 @@ import layersConfig from '../../config/layers.config';
 import { deleteUnusedNodes } from '../../services/transitNodes/transitNodesUtils';
 import getLayer from './layers/TransitionMapLayer';
 import MeasureDistanceDisplay from '../parts/MeasureDistanceDisplay';
-
+import {
+    EditableGeoJsonLayer,
+    DrawLineStringMode,
+    DrawPolygonMode,
+    FeatureCollection
+} from '@deck.gl-community/editable-layers';
 export interface MainMapProps extends LayoutSectionProps {
     zoom: number;
     center: [number, number];
@@ -79,6 +84,11 @@ interface MainMapState {
         pitch: number;
         bearing: number;
     };
+    //animationID: number;
+    time: number;
+    featuresEditor: FeatureCollection;
+    mode: typeof DrawPolygonMode | typeof DrawLineStringMode;
+    selectedFeatureIndexes: number[];
     enabledLayers: string[];
     mapStyleURL: string;
     xyzTileLayer?: Layer; // Temporary! Move this somewhere else
@@ -153,6 +163,14 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
         const xyzTileLayer = getTileLayer();
 
         this.state = {
+            featuresEditor: {
+                type: 'FeatureCollection',
+                features: []
+            },
+            //animationID: window.requestAnimationFrame(this.animate),
+            time: 0,
+            mode: DrawPolygonMode,
+            selectedFeatureIndexes: [],
             viewState: {
                 longitude: props.center[0],
                 latitude: props.center[1],
@@ -217,6 +235,13 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
         this.setState({
             measureToolEnabled: true,
             measureDistance: undefined
+        });
+    };
+
+    animate = () => {
+        this.setState({
+            //time: performance.now() % 10000/*00*/ / 10000/*00*/,
+            //animationID: window.requestAnimationFrame(this.animate) // draw next frame
         });
     };
 
@@ -630,6 +655,7 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
                     setDragging: this.setDragging,
                     mapCallbacks: this.mapCallbacks,
                     updateCount: this.updateCounts[layer.id] || 0,
+                    //time: this.state.time,
                     filter: this.layerManager.getFilter(layer.id)
                 })
             )
@@ -638,6 +664,19 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
         if (this.state.xyzTileLayer) {
             layers.unshift(this.state.xyzTileLayer);
         }
+
+
+
+        /*const layer = new EditableGeoJsonLayer({
+            data: this.state.featuresEditor as FeatureCollection,
+            mode: this.state.mode,
+            selectedFeatureIndexes: this.state.selectedFeatureIndexes,
+            onEdit: ({ updatedData }) => {
+                this.setState({ featuresEditor: updatedData });
+            }
+        });
+
+        layers.push(layer);*/
 
         return (
             <section id="tr__main-map">
@@ -652,6 +691,7 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
                             doubleClickZoom: false,
                             dragPan: !this.state.isDragging
                         }}
+                        _animate={true}
                         layers={layers}
                         onViewStateChange={this.onViewStateChange}
                         onClick={this.onClick}
@@ -679,6 +719,12 @@ class MainMap extends React.Component<MainMapProps & WithTranslation & PropsWith
                                 iconPath={'/dist/images/icons/interface/ruler_white.svg'}
                             />
                         )}
+                        {/*<button onClick={() => this.setState({ mode: DrawLineStringMode })}>
+                            Line
+                        </button>
+                        <button onClick={() => this.setState({ mode: DrawPolygonMode })}>
+                            Polygon
+                        </button>*/}
                     </div>
                     {this.state.measureToolEnabled && <MeasureDistanceDisplay distance={this.state.measureDistance} />}
                 </div>

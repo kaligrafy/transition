@@ -49,6 +49,8 @@ type TransitionMapLayerProps = {
     mapCallbacks: MapCallbacks;
     updateCount: number;
     filter?: (feature: GeoJSON.Feature) => 0 | 1;
+    time?: number;
+    //animationID?: number;
 };
 
 const stringToColor = (hexStringColor: string): [number, number, number] | [number, number, number, number] => [
@@ -300,21 +302,30 @@ const getAnimatedArrowPathLayer = (
     if (layerProperties === undefined) {
         return undefined;
     }
+    const id = props.layerDescription.id;
+    const features = props.layerDescription.layerData.features;
     return new AnimatedArrowPathLayer({
-        id: props.layerDescription.id,
-        data: props.layerDescription.layerData.features,
+        id,
+        data: features,
         getPath: (d) => d.geometry.coordinates,
-        updateTriggers: {
+        //animationID: props.animationID,
+        time: props.time,
+        /*updateTriggers: {
             getPath: props.updateCount,
             getColor: props.updateCount
-        },
-        getDistanceBetweenArrows: 15,
-        widthMaxPixels: 50,
-        speedDivider: 10,
-        disableAnimation: Preferences.get('map.enableMapAnimations', true) ? false : true,
+        },*/
+        //updateTriggers: {
+        //    getPath: props.updateCount,
+        //    getColor: props.updateCount
+        //},
+        //getDistanceBetweenArrows: 15,
+        //widthMaxPixels: 50,
+        //speedDivider: 10,
+        //disableAnimation: Preferences.get('map.enableMapAnimations', true) ? false : true,
         ...eventsToAdd,
         ...layerProperties
     });
+
 };
 
 const getPolygonLayer = (

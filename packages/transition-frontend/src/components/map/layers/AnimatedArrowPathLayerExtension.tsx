@@ -33,10 +33,12 @@ type _AnimatedArrowPathLayerProps = {
 };
 
 export default class AnimatedArrowPathExtension extends LayerExtension {
+    static extensionName = 'AnimatedArrowPathExtension';
     static layerName = 'AnimatedArrowPathLayer';
     static defaultProps = defaultProps;
 
     initializeState(this: Layer<_AnimatedArrowPathLayerProps>, context: LayerContext, extension: this) {
+
         this.getAttributeManager()?.addInstanced({
             instanceStartOffsetRatios: {
                 size: 1,
@@ -105,10 +107,31 @@ export default class AnimatedArrowPathExtension extends LayerExtension {
         return result;
     }
 
+    // TODO: investigate if using a global timer updated in the MainMap state and sent as prop would be better? I guess not, but we should benchmark at least.
     draw(this: Layer<_AnimatedArrowPathLayerProps>, _params: any, _extension: this) {
-        // TODO: investigate if using a global timer updated in the MainMap state and sent as prop would be better? I guess not, but we should benchmark at least.
+        const zoom = this.context.viewport?.zoom || 14;
+
+        // Use a non-linear interpolation to match the specified values
+        // For zoom 12 -> 0.5, zoom 14 -> 1.0, zoom 20 -> 15.0
+        // these values have been tested manually and give the best animation speed by zoom
+        let zoomFactor;
+
+        if (zoom < 10) {
+            zoomFactor = 0.1;
+        } else if (zoom <= 12) {
+            // Linear from minZoom to zoom 12
+            zoomFactor = 0.5;
+        } else if (zoom <= 14) {
+            // Linear from zoom 12 to zoom 14
+            zoomFactor = 0.5 + (zoom - 12) * (1.0 - 0.5) / (14 - 12);
+        } else {
+            // Exponential from zoom 14 to zoom 20
+            const t = (zoom - 14) / (20 - 14);
+            zoomFactor = 1.0 + t * t * (15.0 - 1.0);
+        }
+
         const animatedArrowProps: AnimatedArrowPathProps = {
-            time: this.props.disableAnimation ? 1 : (performance.now() % 10000) /*00*/ / 10000 /*00*/
+            time: this.props.disableAnimation ? 1 : (performance.now() % 10000) / (10000 * zoomFactor)
         };
         (this.state.model as any)?.shaderInputs.setProps({ animatedArrowPath: animatedArrowProps });
     }

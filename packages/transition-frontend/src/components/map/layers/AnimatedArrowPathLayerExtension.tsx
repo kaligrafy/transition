@@ -38,7 +38,6 @@ export default class AnimatedArrowPathExtension extends LayerExtension {
     static defaultProps = defaultProps;
 
     initializeState(this: Layer<_AnimatedArrowPathLayerProps>, context: LayerContext, extension: this) {
-
         this.getAttributeManager()?.addInstanced({
             instanceStartOffsetRatios: {
                 size: 1,
@@ -104,6 +103,8 @@ export default class AnimatedArrowPathExtension extends LayerExtension {
         for (let i = 0, count = result.length; i < count; i++) {
             result[i] = result[i] / sumLength;
         }
+        result.push(result[0]); // add last point again to make sure closed paths are handled
+        // for some reason, with closed loop paths, it seems the segments are drawn in reverse order or with an offset of 1 index
         return result;
     }
 
@@ -123,7 +124,7 @@ export default class AnimatedArrowPathExtension extends LayerExtension {
             zoomFactor = 0.5;
         } else if (zoom <= 14) {
             // Linear from zoom 12 to zoom 14
-            zoomFactor = 0.5 + (zoom - 12) * (1.0 - 0.5) / (14 - 12);
+            zoomFactor = 0.5 + ((zoom - 12) * (1.0 - 0.5)) / (14 - 12);
         } else {
             // Exponential from zoom 14 to zoom 20
             const t = (zoom - 14) / (20 - 14);
@@ -157,12 +158,6 @@ export default class AnimatedArrowPathExtension extends LayerExtension {
                 in float vDistanceBetweenArrows;
                 in float vStartOffsetRatio;
                 in float vLengthRatio;
-            `,
-
-            'fs:#main-start': `
-                if (vLengthRatio == 0.0) { // this should not happen
-                    discard;
-                }
             `,
 
             'fs:#main-end': `

@@ -8,6 +8,7 @@ import Preferences from 'chaire-lib-common/lib/config/Preferences';
 import { MainMapProps } from './types/TransitionMainMapTypes';
 import type { MapViewState } from '@deck.gl/core';
 
+
 const MainMap = ({ zoom, center, activeSection, children }: MainMapProps) => {
     const mapContainerRef = useRef<DeckGLRef>(null);
 

@@ -906,7 +906,8 @@
         },
         "errors": {
             "MissingDemandCsvFile": "Le fichier CSV de demande est manquant",
-            "NodeWeightingEnabledButFileMissing": "La pondération des nœuds était activée mais node_weights.csv est manquant. Exécutez « Démarrer la pondération » depuis le formulaire de conception du réseau avant de lancer le job.",
+            "NodeWeightingEnabledButFileMissing": "La pondération des nœuds était activée mais node_weights.csv est manquant.",
+            "NodeWeightingRequiresSaveFirst": "La pondération des nœuds est activée mais la configuration n'a pas encore été sauvegardée. Sauvegardez la configuration d'abord, puis téléversez ou calculez les poids des nœuds avant de soumettre.",
             "ErrorGettingReplayParameters": "Erreur lors de l'obtention de la configuration de la tâche.",
             "ErrorLoadingJobs": "Erreur lors du chargement des tâches.",
             "ErrorDeletingJob": "Erreur lors de la suppression de la tâche.",

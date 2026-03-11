@@ -19,6 +19,7 @@ import ButtonCell, { ButtonCellWithConfirm } from '../../parts/ButtonCell';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Preferences from 'chaire-lib-common/lib/config/Preferences';
 import ExpandableFileWidget from '../../parts/executableJob/ExpandableFileWidget';
+import ExpandableMessages from '../../parts/executableJob/ExpandableMessages';
 import type { ReturnedJobAttributes } from '../../parts/executableJob/ExecutableJobList';
 
 interface TransitNetworkDesignJobButtonProps {
@@ -319,6 +320,7 @@ const TransitNetworkDesignJobButton: React.FunctionComponent<TransitNetworkDesig
                             <strong>{t('transit:jobs:Status')}:</strong>{' '}
                             <span className={`status_${job.status}`}>{t(`transit:jobs:Status_${job.status}`)}</span>
                         </p>
+                        {job.statusMessages && <ExpandableMessages messages={job.statusMessages} />}
                         <p>
                             <strong>{t('transit:networkDesign:ConfigSummary')}:</strong> <JobConfigSummary job={job} />
                         </p>

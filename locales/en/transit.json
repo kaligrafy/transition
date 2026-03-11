@@ -906,7 +906,8 @@
         },
         "errors": {
             "MissingDemandCsvFile": "Missing demand csv file",
-            "NodeWeightingEnabledButFileMissing": "Node weighting was enabled but node_weights.csv is missing. Run \"Start weighting\" from the network design form before running the job.",
+            "NodeWeightingEnabledButFileMissing": "Node weighting was enabled but node_weights.csv is missing.",
+            "NodeWeightingRequiresSaveFirst": "Node weighting is enabled but the configuration has not been saved yet. Save the configuration first, then upload or calculate node weights before submitting.",
             "ErrorGettingReplayParameters": "Error getting job configuration.",
             "ErrorLoadingJobs": "Error loading jobs.",
             "ErrorDeletingJob": "Error deleting job.",

@@ -111,11 +111,21 @@ const calculateRoute = async (
 };
 
 export class Routing {
+    /**
+     * Calculate the route of each routing mode
+     *
+     * @param routingAttributes The query and its routing modes
+     * @param options isCancelled is called to cancel the calculation.
+     * transitResult is the result or error of the transit mode, already
+     * calculated with the transit query of these attributes, for example by
+     * transitRoutingService.batchRoute
+     * @returns The results by routing mode
+     */
     static async calculate(
         routingAttributes: TripRoutingQueryAttributes,
-        options: { isCancelled?: () => boolean } = {}
+        options: { isCancelled?: () => boolean; transitResult?: TrRoutingRouteResult | TrError } = {}
     ): Promise<RoutingResultsByMode> {
-        const { isCancelled } = options;
+        const { isCancelled, transitResult } = options;
 
         // ** backend
         const routingPromises: Promise<TransitOrRouteCalculatorResult>[] = [];
@@ -124,7 +134,11 @@ export class Routing {
             if (isCancelled && isCancelled()) {
                 throw 'Cancelled';
             }
-            routingPromises.push(this.calculateRoutingMode(routingMode, routingAttributes));
+            routingPromises.push(
+                routingMode === 'transit' && transitResult !== undefined
+                    ? Promise.resolve({ routingMode, result: transitResult })
+                    : this.calculateRoutingMode(routingMode, routingAttributes)
+            );
         }
 
         // Cancel further processing if the request was cancelled

@@ -249,4 +249,20 @@ describe('Routing Calculations', () => {
             expect(resultForMode.paths).toEqual([]);
         }
     });
+
+    test.each([
+        ['result', simplePathResult, simplePathResult.routes, undefined],
+        ['error', new TrError('no routing', 'NO_ROUTING'), [], new TrError('no routing', 'NO_ROUTING').export()]
+    ])('already calculated transit %s', async (_title, transitResult, expectedPaths, expectedError) => {
+        mockGetRouteByMode.mockResolvedValue(walkingRouteNoWaypointTest);
+
+        const result = await Routing.calculate(attributes, { transitResult });
+
+        expect(mockedRouteFunction).not.toHaveBeenCalled();
+        expect(mockGetRouteByMode).toHaveBeenCalledTimes(1);
+        const resultForTransit = result['transit'] as TransitRoutingResultData;
+        expect(resultForTransit.paths).toEqual(expectedPaths);
+        expect(resultForTransit.error).toEqual(expectedError);
+        expect(resultForTransit.walkOnlyPath).toEqual(walkingRouteNoWaypointTest.routes[0]);
+    });
 });

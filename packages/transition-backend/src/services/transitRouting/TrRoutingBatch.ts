@@ -9,7 +9,12 @@ import pQueue from 'p-queue';
 import { EventEmitter } from 'events';
 
 import { TrRoutingBatchManager } from './TrRoutingBatchManager';
-import routeOdTrip from './TrRoutingOdTrip';
+import routeOdTrip, { getOdTripQueryAttributes } from './TrRoutingOdTrip';
+import { getTransitRouteQueryOptionsOrDefault } from 'chaire-lib-backend/lib/services/routing/Routing';
+import transitRoutingService from 'chaire-lib-backend/lib/services/transitRouting/TransitRoutingService';
+import { TransitRouteQueryOptions } from 'chaire-lib-common/lib/api/TrRouting';
+import { TrRoutingRouteResult } from 'chaire-lib-common/lib/services/transitRouting/types';
+import TrError from 'chaire-lib-common/lib/utils/TrError';
 import { parseOdTripsFromCsvStream } from '../odTrip/odTripProvider';
 import { BaseOdTrip } from 'transition-common/lib/services/odTrip/BaseOdTrip';
 import { TransitBatchCalculationResult } from 'transition-common/lib/services/batchCalculation/types';
@@ -23,6 +28,8 @@ import { TranslatableMessage } from 'chaire-lib-common/lib/utils/TranslatableMes
 import { BatchRouteFileResultVisitor } from './batchRouteCalculation/BatchRouteFileResultVisitor';
 
 const CHECKPOINT_INTERVAL = 250;
+// Od trips per batch route request: large enough for trRouting to calculate them on all its threads or on the GPU
+const BATCH_ROUTE_SIZE = 4096;
 
 /**
  * Do batch calculation on a csv file input
@@ -58,6 +65,8 @@ class TrRoutingBatch {
     private odTrips: BaseOdTrip[] = [];
     private errors: TranslatableMessage[] = [];
     private batchManager: TrRoutingBatchManager;
+    // False after a failed batch route request, for trRouting versions without it
+    private batchRouteAvailable = true;
 
     constructor(
         private job: ExecutableJob<BatchRouteJobType>,
@@ -141,35 +150,45 @@ class TrRoutingBatch {
                 this.options.progressEmitter,
                 this.job.attributes.internal_data.checkpoint
             );
-            for (let odTripIndex = startIndex; odTripIndex < odTripsCount; odTripIndex++) {
-                promiseQueue.add(async () => {
-                    // Assert the job is not cancelled, otherwise clear the queue and let the job exit
-                    if (this.options.isCancelled()) {
-                        promiseQueue.clear();
-                    }
-                    try {
-                        await this.odTripTask(odTripIndex, {
-                            trRoutingPort,
-                            logBefore: logOdTripBefore,
-                            logAfter: logOdTripAfter
-                        });
-                    } finally {
-                        try {
-                            completedRoutingsCount++;
-                            if (completedRoutingsCount % progressStep === 0) {
-                                this.options.progressEmitter.emit('progress', {
-                                    name: 'BatchRouting',
-                                    progress: completedRoutingsCount / odTripsCount
-                                });
-                            }
-                            checkpointTracker.handled(odTripIndex);
-                        } catch (error) {
-                            console.error(
-                                `tripRouting: Error completing od trip handling. The checkpoint will be missed: ${odTripIndex}: ${error}`
-                            );
+            for (let chunkStart = startIndex; chunkStart < odTripsCount; chunkStart += BATCH_ROUTE_SIZE) {
+                if (this.options.isCancelled()) {
+                    break;
+                }
+                const chunkEnd = Math.min(chunkStart + BATCH_ROUTE_SIZE, odTripsCount);
+                const transitResults = await this.batchRouteTransit(chunkStart, chunkEnd, trRoutingPort);
+                for (let odTripIndex = chunkStart; odTripIndex < chunkEnd; odTripIndex++) {
+                    promiseQueue.add(async () => {
+                        // Assert the job is not cancelled, otherwise clear the queue and let the job exit
+                        if (this.options.isCancelled()) {
+                            promiseQueue.clear();
                         }
-                    }
-                });
+                        try {
+                            await this.odTripTask(odTripIndex, {
+                                trRoutingPort,
+                                transitResult: transitResults[odTripIndex - chunkStart],
+                                logBefore: logOdTripBefore,
+                                logAfter: logOdTripAfter
+                            });
+                        } finally {
+                            try {
+                                completedRoutingsCount++;
+                                if (completedRoutingsCount % progressStep === 0) {
+                                    this.options.progressEmitter.emit('progress', {
+                                        name: 'BatchRouting',
+                                        progress: completedRoutingsCount / odTripsCount
+                                    });
+                                }
+                                checkpointTracker.handled(odTripIndex);
+                            } catch (error) {
+                                console.error(
+                                    `tripRouting: Error completing od trip handling. The checkpoint will be missed: ${odTripIndex}: ${error}`
+                                );
+                            }
+                        }
+                    });
+                }
+                // Calculate the transit of the next chunk while the last tasks of this one run
+                await promiseQueue.onEmpty();
             }
 
             await promiseQueue.onIdle();
@@ -277,10 +296,64 @@ class TrRoutingBatch {
         return { odTrips, errors };
     };
 
+    /**
+     * Calculate together the transit routes of od trips, with one batch route
+     * request to trRouting
+     *
+     * @param start The index of the first od trip
+     * @param end The index after the last od trip
+     * @param trRoutingPort The port of the trRouting instance of the batch
+     * @returns The transit result or error of each od trip, undefined if the
+     * transit mode is not requested or for od trips without origin or
+     * destination, or all undefined if trRouting does not support batch route
+     * requests, to calculate them one by one
+     */
+    private batchRouteTransit = async (
+        start: number,
+        end: number,
+        trRoutingPort?: number
+    ): Promise<(TrRoutingRouteResult | TrError | undefined)[]> => {
+        const transitResults: (TrRoutingRouteResult | TrError | undefined)[] = new Array(end - start).fill(undefined);
+        const routing = this.job.attributes.data.parameters.transitRoutingAttributes;
+        if (!routing.routingModes.includes('transit') || !this.batchRouteAvailable) {
+            return transitResults;
+        }
+        const indexes: number[] = [];
+        const queries: TransitRouteQueryOptions[] = [];
+        for (let odTripIndex = start; odTripIndex < end; odTripIndex++) {
+            const attributes = getOdTripQueryAttributes(this.odTrips[odTripIndex], {
+                routing,
+                trRoutingPort,
+                reverseOD: false
+            });
+            if (attributes !== undefined) {
+                indexes.push(odTripIndex - start);
+                queries.push(
+                    getTransitRouteQueryOptionsOrDefault(attributes, [
+                        attributes.originGeojson,
+                        attributes.destinationGeojson
+                    ])
+                );
+            }
+        }
+        if (queries.length === 0) {
+            return transitResults;
+        }
+        try {
+            const results = await transitRoutingService.batchRoute(queries, { port: trRoutingPort });
+            indexes.forEach((index, query) => (transitResults[index] = results[query]));
+        } catch (error) {
+            console.warn(`TrRoutingBatch: batch route request failed, routing each od trip instead: ${error}`);
+            this.batchRouteAvailable = false;
+        }
+        return transitResults;
+    };
+
     private odTripTask = async (
         odTripIndex: number,
         options: {
             trRoutingPort?: number;
+            transitResult?: TrRoutingRouteResult | TrError;
             logBefore: (index: number) => void;
             logAfter: (index: number) => void;
         }
@@ -295,7 +368,8 @@ class TrRoutingBatch {
             const routingResult = await routeOdTrip(odTrip, {
                 trRoutingPort: options.trRoutingPort,
                 routing: this.job.attributes.data.parameters.transitRoutingAttributes,
-                reverseOD: false
+                reverseOD: false,
+                transitResult: options.transitResult
             });
             // Delete geometries from unimodal results if they are not requested
             // TODO This should be handled lower in the stack and not make its way here. Need to check how deep the withGeometries flag goes

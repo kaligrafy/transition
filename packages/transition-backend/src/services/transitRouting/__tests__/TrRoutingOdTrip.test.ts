@@ -73,7 +73,21 @@ describe('Various scenario of trip calculation', () => {
         expect(calculateMock).toHaveBeenCalledWith(expect.objectContaining({
             originGeojson: origin,
             destinationGeojson: destination
-        }));
+        }), { transitResult: undefined });
+    });
+
+    test('With an already calculated transit result', async () => {
+        calculateMock.mockResolvedValue({});
+
+        await routeOdTrip(odTrip, {
+            routing: transitRoutingAttributes,
+            reverseOD: false,
+            transitResult: simplePathResult
+        });
+        expect(calculateMock).toHaveBeenCalledWith(expect.objectContaining({
+            originGeojson: origin,
+            destinationGeojson: destination
+        }), { transitResult: simplePathResult });
     });
 
     test('Multiple modes', async () => {
@@ -221,5 +235,5 @@ test('Test reverse OD', async () => {
     expect(calculateMock).toHaveBeenCalledWith(expect.objectContaining({
         originGeojson: destination,
         destinationGeojson: origin
-    }));
+    }), { transitResult: undefined });
 });

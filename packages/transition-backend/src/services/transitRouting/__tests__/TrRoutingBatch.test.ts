@@ -17,6 +17,7 @@ import resultDbQueries from '../../../models/db/batchRouteResults.db.queries';
 import jobsDbQueries from '../../../models/db/jobs.db.queries';
 import { directoryManager } from 'chaire-lib-backend/lib/utils/filesystem/directoryManager';
 import routeOdTrip from '../TrRoutingOdTrip';
+import transitRoutingService from 'chaire-lib-backend/lib/services/transitRouting/TransitRoutingService';
 import { Readable } from 'stream';
 import { ExecutableJob } from '../../executableJob/ExecutableJob';
 import { BatchRouteJobType } from '../BatchRoutingJob';
@@ -86,8 +87,17 @@ jest.mock('fs', () => {
     };
 });
 
-jest.mock('../TrRoutingOdTrip', () => jest.fn());
+jest.mock('../TrRoutingOdTrip', () => ({
+    __esModule: true,
+    default: jest.fn(),
+    getOdTripQueryAttributes: jest.requireActual('../TrRoutingOdTrip').getOdTripQueryAttributes
+}));
 const routeOdTripMock = routeOdTrip as jest.MockedFunction<typeof routeOdTrip>;
+
+jest.mock('chaire-lib-backend/lib/services/transitRouting/TransitRoutingService', () => ({
+    batchRoute: jest.fn()
+}));
+const mockBatchRoute = transitRoutingService.batchRoute as jest.MockedFunction<typeof transitRoutingService.batchRoute>;
 routeOdTripMock.mockImplementation(async (odTrip: BaseOdTrip) => ({
     uuid: odTrip.getId(),
     internalId: odTrip.attributes.internal_id as string,
@@ -181,6 +191,8 @@ beforeEach(async () => {
     resultsInDb.splice(0);
     resultsInDbCnt = 0;
     routeOdTripMock.mockClear();
+    mockBatchRoute.mockReset();
+    mockBatchRoute.mockImplementation(async (queries) => queries.map(() => simplePathResult));
     mockCreateStream.mockClear();
     mockResultCreate.mockClear();
     mockResultCollection.mockClear();
@@ -244,6 +256,33 @@ test('Batch route to csv', async () => {
     expect(mockStreamResults).toHaveBeenCalledWith(jobId);
     expect(mockResultDeleteForJob).toHaveBeenCalledTimes(1);
     expect(mockResultDeleteForJob).toHaveBeenCalledWith(jobId, undefined);
+});
+
+test.each([
+    ['calculated by a batch route request', true, simplePathResult],
+    ['calculated by each od trip if the batch route request fails', false, undefined]
+])('Batch route with the transit %s', async (_title, batchRouteSucceeds, expectedTransitResult) => {
+    if (!batchRouteSucceeds) {
+        mockBatchRoute.mockRejectedValueOnce(new Error('Not found'));
+    }
+
+    await batchRoute(job, { progressEmitter: socketMock, isCancelled: isCancelledMock });
+
+    expect(mockBatchRoute).toHaveBeenCalledTimes(1);
+    expect(mockBatchRoute).toHaveBeenCalledWith(
+        odTrips.map((odTrip) => expect.objectContaining({
+            originDestination: [
+                expect.objectContaining({ geometry: odTrip.attributes.origin_geography }),
+                expect.objectContaining({ geometry: odTrip.attributes.destination_geography })
+            ],
+            timeOfTrip: odTrip.attributes.timeOfTrip
+        })),
+        { port: 14000 }
+    );
+    expect(routeOdTripMock).toHaveBeenCalledTimes(odTrips.length);
+    for (const odTrip of odTrips) {
+        expect(routeOdTripMock).toHaveBeenCalledWith(odTrip, expect.objectContaining({ transitResult: expectedTransitResult }));
+    }
 });
 
 test('Batch route with custom cachePath parameter', async () => {

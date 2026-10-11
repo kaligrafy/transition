@@ -22,14 +22,23 @@ class TrRoutingServiceBackend {
         query: string,
         host: string | undefined,
         port: string | number | undefined,
-        customRequestPath: string
+        customRequestPath: string,
+        body?: unknown
     ): Promise<T> {
-        const trRoutingRequest = `${this.getUrlPrefix(host, port, customRequestPath)}?${query}`;
+        // Requests with a body are POST requests with a JSON body, without query string
+        const trRoutingRequest =
+            body === undefined
+                ? `${this.getUrlPrefix(host, port, customRequestPath)}?${query}`
+                : this.getUrlPrefix(host, port, customRequestPath);
+        const requestInit: RequestInit =
+            body === undefined
+                ? { method: 'GET' }
+                : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
 
         const maxAttempts = 2;
         for (let i = 0; i < maxAttempts; i++) {
             try {
-                const response = await fetch(trRoutingRequest, { method: 'GET' });
+                const response = await fetch(trRoutingRequest, requestInit);
                 // 200 and 400 are both valid response from TrRouting and are handled by the parsers
                 if (![200, 400].includes(response.status)) {
                     throw new Error(`TrRouting request failed with status ${response.status}`);
@@ -68,37 +77,45 @@ class TrRoutingServiceBackend {
         >(query, host, port, 'route/v1/transit');
     }
 
-    private routeOptionsToQueryString = (parameters: TrRoutingApi.TransitRouteQueryOptions): string => {
-        const trRoutingQueryArray = [
-            `origin=${parameters.originDestination[0].geometry.coordinates[0]},${parameters.originDestination[0].geometry.coordinates[1]}`,
-            `destination=${parameters.originDestination[1].geometry.coordinates[0]},${parameters.originDestination[1].geometry.coordinates[1]}`,
-            `scenario_id=${parameters.scenarioId}`,
-            `time_of_trip=${parameters.timeOfTrip}`,
-            `time_type=${parameters.timeOfTripType === 'departure' ? 0 : 1}`,
-            `alternatives=${parameters.alternatives !== true ? 'false' : 'true'}`
-        ];
+    // The parameters of /v2/route, in the order of the query string
+    private routeOptionsToParameters = (
+        parameters: TrRoutingApi.TransitRouteQueryOptions
+    ): { [name: string]: string | number } => {
+        const trRoutingParameters: { [name: string]: string | number } = {
+            origin: `${parameters.originDestination[0].geometry.coordinates[0]},${parameters.originDestination[0].geometry.coordinates[1]}`,
+            destination: `${parameters.originDestination[1].geometry.coordinates[0]},${parameters.originDestination[1].geometry.coordinates[1]}`,
+            scenario_id: parameters.scenarioId,
+            time_of_trip: parameters.timeOfTrip,
+            time_type: parameters.timeOfTripType === 'departure' ? 0 : 1,
+            alternatives: parameters.alternatives !== true ? 'false' : 'true'
+        };
 
         if (parameters.minWaitingTime) {
-            trRoutingQueryArray.push(`min_waiting_time=${parameters.minWaitingTime}`);
+            trRoutingParameters.min_waiting_time = parameters.minWaitingTime;
         }
         if (parameters.maxAccessTravelTime) {
-            trRoutingQueryArray.push(`max_access_travel_time=${parameters.maxAccessTravelTime}`);
+            trRoutingParameters.max_access_travel_time = parameters.maxAccessTravelTime;
         }
         if (parameters.maxEgressTravelTime) {
-            trRoutingQueryArray.push(`max_egress_travel_time=${parameters.maxEgressTravelTime}`);
+            trRoutingParameters.max_egress_travel_time = parameters.maxEgressTravelTime;
         }
         if (parameters.maxTransferTravelTime) {
-            trRoutingQueryArray.push(`max_transfer_travel_time=${parameters.maxTransferTravelTime}`);
+            trRoutingParameters.max_transfer_travel_time = parameters.maxTransferTravelTime;
         }
         if (parameters.maxTravelTime) {
-            trRoutingQueryArray.push(`max_travel_time=${parameters.maxTravelTime}`);
+            trRoutingParameters.max_travel_time = parameters.maxTravelTime;
         }
         if (parameters.maxFirstWaitingTime) {
-            trRoutingQueryArray.push(`max_first_waiting_time=${parameters.maxFirstWaitingTime}`);
+            trRoutingParameters.max_first_waiting_time = parameters.maxFirstWaitingTime;
         }
 
-        return trRoutingQueryArray.join('&');
+        return trRoutingParameters;
     };
+
+    private routeOptionsToQueryString = (parameters: TrRoutingApi.TransitRouteQueryOptions): string =>
+        Object.entries(this.routeOptionsToParameters(parameters))
+            .map(([name, value]) => `${name}=${value}`)
+            .join('&');
 
     private accessMapOptionsToQueryString = (parameters: TrRoutingApi.AccessibilityMapQueryOptions): string => {
         const trRoutingQueryArray = [
@@ -141,6 +158,27 @@ class TrRoutingServiceBackend {
             hostPort.host,
             hostPort.port,
             'v2/route'
+        );
+    }
+
+    /**
+     * Calculate the transit routes of many queries in one request to
+     * /v2/batchRoute, which is much faster than one route request per query
+     *
+     * @param parameters The parameters of each query
+     * @param hostPort The host and port of the trRouting server
+     * @returns The /v2/route response of each query, in the same order
+     */
+    batchRoute(
+        parameters: TrRoutingApi.TransitRouteQueryOptions[],
+        hostPort: TrRoutingApi.HostPort = {}
+    ): Promise<TrRoutingApi.TrRoutingV2.BatchRouteResponse> {
+        return this.request<TrRoutingApi.TrRoutingV2.BatchRouteResponse>(
+            '',
+            hostPort.host,
+            hostPort.port,
+            'v2/batchRoute',
+            { queries: parameters.map(this.routeOptionsToParameters) }
         );
     }
 

@@ -156,6 +156,9 @@ export type TripStep = TripStepWalking | TripStepBoarding | TripStepUnboarding;
 
 export type RouteResponse = RouteSuccessResult | NoRoutingRouteResult | DataError | RouteQueryError;
 
+/** Response of /v2/batchRoute: the /v2/route response of each query, in the same order */
+export type BatchRouteResponse = { results: RouteResponse[] } | DataError | RouteQueryError;
+
 export const isErrorWithCode = (result: RouteResponse | SummaryResponse): result is RouteQueryError | DataError => {
     return result.status === 'data_error' || result.status === 'query_error';
 };

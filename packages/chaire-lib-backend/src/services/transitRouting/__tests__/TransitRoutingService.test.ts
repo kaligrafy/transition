@@ -17,10 +17,12 @@ const destination = TestUtils.makePoint([-73.742861, 45.361682]);
 
 jest.mock('../../../utils/trRouting/TrRoutingServiceBackend', () => ({
     route: jest.fn(),
+    batchRoute: jest.fn(),
     summary: jest.fn(),
     accessibilityMap: jest.fn()
 }));
 const mockRouteBackend = trRoutingServiceBackend.route as jest.MockedFunction<typeof trRoutingServiceBackend.route>;
+const mockBatchRouteBackend = trRoutingServiceBackend.batchRoute as jest.MockedFunction<typeof trRoutingServiceBackend.batchRoute>;
 const mockSummaryBackend = trRoutingServiceBackend.summary as jest.MockedFunction<typeof trRoutingServiceBackend.summary>;
 const mockAccessibilityMapBackend = trRoutingServiceBackend.accessibilityMap as jest.MockedFunction<typeof trRoutingServiceBackend.accessibilityMap>;
 
@@ -273,6 +275,38 @@ describe('Test route call', () => {
         expect((exceptionObject.localizedMessage as any).text).toContain('TrRoutingServerError');
         expect(mockRouteBackend).toHaveBeenCalledTimes(1);
         expect(mockRouteBackend).toHaveBeenLastCalledWith(parameters, undefined);
+    });
+
+    test('Test batch route, with the result or error of each query', async () => {
+        const hostPort = { port: 1234 };
+        mockBatchRouteBackend.mockResolvedValueOnce({
+            results: [
+                defaultSuccessfulQuery,
+                { status: 'no_routing_found', query: defaultSuccessfulQuery.query, reason: 'NO_ACCESS_AT_ORIGIN' }
+            ]
+        });
+        const results = await transitRoutingService.batchRoute([parameters, parameters], hostPort);
+        expect(mockBatchRouteBackend).toHaveBeenCalledTimes(1);
+        expect(mockBatchRouteBackend).toHaveBeenLastCalledWith([parameters, parameters], hostPort);
+        expect(results.length).toEqual(2);
+        expect(results[0]).toEqual({ routes: [{ ...pathNoTransferRouteV2, ...defaultQueryToResult }], totalRoutesCalculated: 1 });
+        expect(results[1] instanceof TrError).toBeTruthy();
+        expect((results[1] as TrError).export().errorCode).toEqual(ErrorCodes.NoAccessAtOrigin);
+    });
+
+    test.each([
+        ['data error', () => Promise.resolve({ status: 'data_error' as const, errorCode: 'MISSING_DATA_NODES' as const }), ErrorCodes.MissingData],
+        ['rejected request', () => Promise.reject(new Error('Route error')), ErrorCodes.OtherError]
+    ])('Test batch route with a %s', async (_title, response, errorCode) => {
+        mockBatchRouteBackend.mockImplementationOnce(response as any);
+        let exception;
+        try {
+            await transitRoutingService.batchRoute([parameters]);
+        } catch (error) {
+            exception = error;
+        }
+        expect(exception instanceof TrError).toBeTruthy();
+        expect((exception as TrError).export().errorCode).toEqual(errorCode);
     });
 });
 

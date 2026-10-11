@@ -10,6 +10,7 @@ import { TransitRouteQueryOptions, HostPort, AccessibilityMapQueryOptions } from
 import {
     SummaryResponse,
     RouteResponse,
+    BatchRouteResponse,
     AccessibilityMapResponse
 } from 'chaire-lib-common/lib/api/TrRouting/trRoutingApiV2';
 import * as Status from 'chaire-lib-common/lib/utils/Status';
@@ -106,6 +107,19 @@ class TransitRoutingService {
     }): Promise<Status.Status<RouteResponse>> {
         try {
             const routingResults = await trRoutingServiceBackend.route(params.parameters, params.hostPort);
+            return Status.createOk(routingResults);
+        } catch (error) {
+            console.error(error);
+            return Status.createError(TrError.isTrError(error) ? error.message : error);
+        }
+    }
+
+    private async callBatchRoute(params: {
+        parameters: TransitRouteQueryOptions[];
+        hostPort?: HostPort;
+    }): Promise<Status.Status<BatchRouteResponse>> {
+        try {
+            const routingResults = await trRoutingServiceBackend.batchRoute(params.parameters, params.hostPort);
             return Status.createOk(routingResults);
         } catch (error) {
             console.error(error);
@@ -256,6 +270,39 @@ class TransitRoutingService {
         }
         const routingResult = Status.unwrap(responseStatus);
         return this.handleRouteResponse(routingResult);
+    }
+
+    /**
+     * Calculate the transit routes of many queries in one request, with the
+     * same result as `route` for each query
+     *
+     * @param params The parameters of each query
+     * @param hostPort The host and port of the trRouting server
+     * @returns For each query, in the same order, its result, or the error
+     * `route` would throw
+     * @throws TrError if the whole request fails
+     */
+    public async batchRoute(
+        params: TrRoutingApi.TransitRouteQueryOptions[],
+        hostPort?: TrRoutingApi.HostPort
+    ): Promise<(TrRoutingRouteResult | TrError)[]> {
+        const responseStatus = await this.callBatchRoute({ parameters: params, hostPort });
+        if (Status.isStatusError(responseStatus)) {
+            this.handleErrorStatus(responseStatus);
+        }
+        const batchResult = Status.unwrap(responseStatus);
+        if (!('results' in batchResult)) {
+            // Throws the error of the data or query error
+            this.handleRouteResponse(batchResult);
+            throw new TrError('cannot calculate transit routes with trRouting: no results', ErrorCodes.OtherError);
+        }
+        return batchResult.results.map((routingResult) => {
+            try {
+                return this.handleRouteResponse(routingResult);
+            } catch (error) {
+                return TrError.isTrError(error) ? error : new TrError(String(error), ErrorCodes.OtherError);
+            }
+        });
     }
 
     public async accessibleMap(

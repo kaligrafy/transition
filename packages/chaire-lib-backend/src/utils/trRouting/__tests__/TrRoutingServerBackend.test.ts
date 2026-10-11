@@ -21,6 +21,35 @@ const defaultParameters = {
     timeOfTripType: 'departure' as const
 };
 
+describe('Batch route queries', () => {
+
+    test('Test call with the parameters of each query in a POST body', async () => {
+        const jsonObject = { results: [{ status: 'success' }, { status: 'no_routing_found' }] };
+        mockedFetch.mockResolvedValue(new Response(JSON.stringify(jsonObject), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+        }));
+
+        const result = await TrRoutingServiceBackend.batchRoute([defaultParameters, { ...defaultParameters, timeOfTripType: 'arrival', minWaitingTime: 120 }], { port: 1234 });
+        const expectedQuery = {
+            origin: '-73,45',
+            destination: '-74,45.5',
+            scenario_id: defaultParameters.scenarioId,
+            time_of_trip: defaultParameters.timeOfTrip,
+            time_type: 0,
+            alternatives: 'false'
+        };
+        expect(mockedFetch).toHaveBeenCalledTimes(1);
+        expect(mockedFetch).toHaveBeenCalledWith('http://localhost:1234/v2/batchRoute', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ queries: [expectedQuery, { ...expectedQuery, time_type: 1, min_waiting_time: 120 }] })
+        });
+        expect(result).toEqual(jsonObject);
+    });
+
+});
+
 describe('Route queries', () => {
 
     test('Test simple call', async () => {
